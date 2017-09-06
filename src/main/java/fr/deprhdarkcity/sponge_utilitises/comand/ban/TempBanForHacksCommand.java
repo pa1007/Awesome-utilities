@@ -40,8 +40,8 @@ public class TempBanForHacksCommand extends AbstractCommand {
                 .arguments(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.onlyOne(GenericArguments.longNum(Text.of("Time in second"))))
-                .permission(Permissions.BAN_COMMAND)
-                .description(Text.of("Ban player with a given reason"))
+                .permission(Permissions.TEMP_BAN_COMMAND)
+                .description(Text.of("Temp Ban player with a given reason"))
                 .executor(this)
                 .build();
     }

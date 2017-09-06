@@ -20,12 +20,17 @@ public final class Permissions {
     /**
      * Permission for teleporting himself to someone who is in a different world.
      */
-    public static final String INTERDIMENTIONAL_TELEPORT = "fr.deprhdarkcity.sponge_utilitises.interdimentional_teleport";
+    public static final String INTERDIMENTIONAL_TELEPORT ="fr.deprhdarkcity.sponge_utilitises.interdimentional_teleport";
 
     /**
      * Permission for Ban a player with choices.
      */
     public static final String BAN_COMMAND = "fr.deprhdarkcity.sponge_utilitises.ban_command";
+
+    /**
+     * Permission for TempBan a plater with choices.
+     */
+    public static final String TEMP_BAN_COMMAND = "fr.deprhdarkcity.sponge_utilitises.temp_ban_command";
 
     private Permissions() {}
 }
