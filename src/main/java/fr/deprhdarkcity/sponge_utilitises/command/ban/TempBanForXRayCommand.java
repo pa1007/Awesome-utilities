@@ -1,8 +1,8 @@
-package fr.deprhdarkcity.sponge_utilitises.comand.ban;
+package fr.deprhdarkcity.sponge_utilitises.command.ban;
 
 import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
-import fr.deprhdarkcity.sponge_utilitises.comand.AbstractCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

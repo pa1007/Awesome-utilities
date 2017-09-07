@@ -1,8 +1,8 @@
-package fr.deprhdarkcity.sponge_utilitises.comand.Warps;
+package fr.deprhdarkcity.sponge_utilitises.command.warp;
 
 import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
-import fr.deprhdarkcity.sponge_utilitises.comand.AbstractCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -11,9 +11,9 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-public class WarpsDelCommand extends AbstractCommand {
+public class DeleteCommand extends AbstractCommand {
 
-    public WarpsDelCommand(SpongeUtilities spongeUtilities) {
+    public DeleteCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
     }
 
@@ -25,8 +25,7 @@ public class WarpsDelCommand extends AbstractCommand {
     @Override
     public CommandSpec createCommand() {
         return CommandSpec.builder()
-                .arguments(
-                        GenericArguments.onlyOne(GenericArguments.string(Text.of("Name of the warp"))))
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("The warp's name"))))
                 .permission(Permissions.DELETE_WARP)
                 .description(Text.of("tp to a warp"))
                 .executor(this)
@@ -35,18 +34,22 @@ public class WarpsDelCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
-        String fileName = args.<String>getOne(Text.of("Name of the warp")).get();
 
-        pluginInstance.delWarp(fileName);
-        pluginInstance.loadWarp();
-        src.sendMessage(Text.of(
-                TextColors.RED,
-                "[Warps] : ",
-                TextColors.RESET,
-                "The warp ",
-                fileName,
-                " has been deleted"
-        ));
+        String warpName = args.<String>getOne(Text.of("The warp's name")).orElseThrow(NullPointerException::new);
+
+        if (this.pluginInstance.getWarps().remove(warpName) == null) {
+            src.sendMessage(
+                    Text.of(TextColors.RED, "[warp] : ", TextColors.RESET, "The warp ", warpName, " was not found!")
+            );
+        }
+        else {
+            src.sendMessage(
+                    Text.of(TextColors.RED, "[warp] : ", TextColors.RESET, "The warp ", warpName, " has been deleted!")
+            );
+
+            this.pluginInstance.saveWarps();
+        }
+
         return CommandResult.empty();
     }
 }

@@ -1,4 +1,4 @@
-package fr.deprhdarkcity.sponge_utilitises.comand;
+package fr.deprhdarkcity.sponge_utilitises.command;
 
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
 import java.util.Objects;

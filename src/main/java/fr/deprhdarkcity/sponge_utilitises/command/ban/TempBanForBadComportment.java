@@ -1,10 +1,9 @@
-package fr.deprhdarkcity.sponge_utilitises.comand.ban;
+package fr.deprhdarkcity.sponge_utilitises.command.ban;
 
 import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
-import fr.deprhdarkcity.sponge_utilitises.comand.AbstractCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -15,16 +14,17 @@ import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.ban.Ban;
 import org.spongepowered.api.util.ban.BanTypes;
+import java.time.Instant;
 
-public class BanForXRayCommand extends AbstractCommand {
+public class TempBanForBadComportment extends AbstractCommand {
 
-    public BanForXRayCommand(SpongeUtilities spongeUtilities) {
+    public TempBanForBadComportment(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
     }
 
     @Override
     public String[] getNames() {
-        return new String[]{"BanForHacks"};
+        return new String[]{"TempBanForBadComportment"};
     }
 
 
@@ -32,25 +32,32 @@ public class BanForXRayCommand extends AbstractCommand {
     public CommandSpec createCommand() {
         return CommandSpec.builder()
                 .arguments(
-                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))))
-                .permission(Permissions.BAN_COMMAND)
-                .description(Text.of("Ban player with a given reason"))
+                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
+                        GenericArguments.onlyOne(GenericArguments.longNum(Text.of("Time in second"))))
+                .permission(Permissions.TEMP_BAN_COMMAND)
+                .description(Text.of("Temp Ban player with a given reason"))
                 .executor(this)
                 .build();
     }
 
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
-        Player     user    = args.<Player>getOne(Text.of("player")).get();
-        Player     admin   = ((Player) src);
+        Player  user       = args.<Player>getOne(Text.of("player")).get();
+        Player  admin      = ((Player) src);
+        Long       time       = args.<Long>getOne(Text.of("Time in second")).get();
+        Instant now1       = Instant.now();
+        Instant Expiration = Instant.now().plusSeconds(time);
+
         BanService service = Sponge.getServiceManager().provide(BanService.class).get();
-        Ban ban = Ban.builder().type(BanTypes.PROFILE).profile(user.getProfile())
-                .reason(Text.of("X-Ray, plz go to The website to see the exact reason")).source(src).build();
+        Ban
+                ban = Ban.builder().type(BanTypes.PROFILE).profile(user.getProfile()).expirationDate(Expiration).startDate(now1)
+                .reason(Text.of("Bad Comportment, plz go to The website to see the exact reason")).source(src).build();
         try {
             service.addBan(ban);
             if (service.hasBan(ban)){
                 src.sendMessage(Text.of("The player ", user.getName(), " has been ban"));
-                user.kick(Text.of("You have been banned for usage of X-Ray, plz go to the web site"));
+                user.kick(Text.of("You have been banned Because you have a bad Comportment for",Expiration ," , plz go to the web site "));
                 return CommandResult.success();
             }else {
                 src.sendMessage(Text.of("The player ", user.getName(), " Has not been ban plz retry"));
@@ -63,5 +70,4 @@ public class BanForXRayCommand extends AbstractCommand {
         }
 
     }
-
 }

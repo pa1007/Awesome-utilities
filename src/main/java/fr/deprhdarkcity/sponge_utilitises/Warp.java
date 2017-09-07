@@ -1,59 +1,118 @@
 package fr.deprhdarkcity.sponge_utilitises;
 
 import com.flowpowered.math.vector.Vector3d;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import java.util.UUID;
 
 public class Warp {
+
+    /**
+     * The warp position.
+     *
+     * @since 1.0
+     */
     private Vector3d position;
-    private String   worldname;
-    private String   name;
-    private String   playername;
 
+    /**
+     * The world's name.
+     *
+     * @since 1.0
+     */
+    private String worldName;
 
-    public Warp(Vector3d position, String worldname, String name, String playername) {
-        this.setPosition(position);
-        this.setWorldname(worldname);
-        this.setName(name);
-        this.setPlayername(playername);
+    /**
+     * The warp's name.
+     *
+     * @since 1.0
+     */
+    private String name;
 
-    }
-    public String getPlayername() {
-        return playername;
-    }
+    /**
+     * The user that created the warp.
+     *
+     * @since 1.0
+     */
+    private UUID author;
 
-    public void setPlayername(String playername) {
-        this.playername = playername;
-    }
+    public Warp() { }
 
-    public Vector3d getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector3d position) {
+    public Warp(String name, Vector3d position, String worldName, UUID author) {
+        this.name = name;
         this.position = position;
+        this.worldName = worldName;
+        this.author = author;
     }
 
-    public String getWorldname() {
-        return worldname;
+    /**
+     * @return The user that created the warp.
+     * @since 1.0
+     */
+    public UUID getAuthor() {
+        return this.author;
     }
 
-    public void setWorldname(String worldname) {
-        this.worldname = worldname;
+    /**
+     * Sets the <code>author</code> field.
+     *
+     * @param author The user that created the warp.
+     * @since 1.0
+     */
+    public void setAuthor(UUID author) {
+        this.author = author;
     }
 
+    /**
+     * @return The warp's name.
+     * @since 1.0
+     */
     public String getName() {
-        return name;
+        return this.name;
     }
 
+    /**
+     * Sets the <code>name</code> field.
+     *
+     * @param name The warp's name.
+     * @since 1.0
+     */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return The world's name.
+     * @since 1.0
+     */
+    public String getWorldName() {
+        return this.worldName;
+    }
+
+    /**
+     * Sets the <code>worldName</code> field.
+     *
+     * @param worldName The world's name.
+     * @since 1.0
+     */
+    public void setWorldName(String worldName) {
+        this.worldName = worldName;
+    }
+
+    /**
+     * @return The warp position.
+     * @since 1.0
+     */
+    public Vector3d getPosition() {
+        return this.position;
+    }
+
+    /**
+     * Sets the <code>position</code> field.
+     *
+     * @param position The warp position.
+     * @since 1.0
+     */
+    public void setPosition(Vector3d position) {
+        this.position = position;
     }
 
     @Override
@@ -61,52 +120,28 @@ public class Warp {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Warp)) {
             return false;
         }
         Warp warp = (Warp) o;
-        return Objects.equals(position , warp.position) &&
-               Objects.equals(worldname, warp.worldname) &&
+        return Objects.equals(position, warp.position) &&
+               Objects.equals(worldName, warp.worldName) &&
                Objects.equals(name, warp.name) &&
-               Objects.equals(playername, warp.playername);
+               Objects.equals(author, warp.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, worldname, name, playername);
+        return Objects.hash(position, worldName, name, author);
     }
 
     @Override
     public String toString() {
-        return "WarpsCreateCommand{" +
-               "position=" + position +
-               ", worldname='" + worldname + '\'' +
-               ", name='" + name + '\'' +
-               ", playername='" + playername + '\'' +
-               '}';}
-
-    public static Set<Warp> loadAll(Path directory) throws IOException {
-            Set<Warp> warp = new HashSet<>();
-
-            for (Path child : Files.newDirectoryStream(directory)) {
-
-              try (BufferedReader reader = Files.newBufferedReader(child)) {
-                 warp.add(SpongeUtilities.GSON.fromJson(reader, Warp.class));
-            }
-        }
-
-        return warp;
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("position", position)
+                .add("worldName", worldName)
+                .add("name", name)
+                .add("author", author)
+                .toString();
     }
-
-    public void save(Path saveDirectory) throws IOException {
-        try (BufferedWriter writer =
-                     Files.newBufferedWriter(saveDirectory.resolve(String.format("%s.json", this.name)))) {
-            SpongeUtilities.GSON.toJson(this, writer);
-        }
-    }
-
-    public void delete(String filename, Path saveDirectory) throws IOException {
-        Files.deleteIfExists(saveDirectory.resolve(String.format("%s.json", filename)));
-    }
-
 }

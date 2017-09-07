@@ -2,14 +2,13 @@ package fr.deprhdarkcity.sponge_utilitises;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.deprhdarkcity.sponge_utilitises.comand.Command;
-import fr.deprhdarkcity.sponge_utilitises.comand.Warps.WarpsCreateCommand;
-import fr.deprhdarkcity.sponge_utilitises.comand.Warps.WarpsDelCommand;
-import fr.deprhdarkcity.sponge_utilitises.comand.Warps.WarpsTPCommand;
-import fr.deprhdarkcity.sponge_utilitises.comand.ban.*;
-import fr.deprhdarkcity.sponge_utilitises.comand.teleportation.InterdimentionalTeleportationCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.Command;
+import fr.deprhdarkcity.sponge_utilitises.command.ban.*;
+import fr.deprhdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.warp.CreateCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.warp.DeleteCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.warp.TeleportCommand;
 import org.slf4j.Logger;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
@@ -19,10 +18,15 @@ import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Plugin(id = "utilises",
         name = "SpongeUtilities",
@@ -34,23 +38,23 @@ public class SpongeUtilities {
 
     static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
-
-    public Set<String> WarpsName = new HashSet<String>();
     @Inject
     @ConfigDir(sharedRoot = false)
-    private       Path      configPath;
-    private       Game      game;
-    private final Command[] commands;
-    private Set<Warp> warp = new HashSet<>();
+    private Path configPath;
+
     @Inject
     private Logger logger;
-    private SpongeUtilities pluginInstance = SpongeUtilities.this;
+
+    private final Command[] commands;
+
+    private final Map<String, Warp> warps;
+
 
     public SpongeUtilities() {
         this.commands = new Command[]{
-                new WarpsCreateCommand(this),
-                new WarpsTPCommand(this),
-                new WarpsDelCommand(this),
+                new CreateCommand(this),
+                new TeleportCommand(this),
+                new DeleteCommand(this),
                 new InterdimentionalTeleportationCommand(this),
                 new BanForHacksCommand(this),
                 new BanForBadComportementCommand(this),
@@ -59,101 +63,84 @@ public class SpongeUtilities {
                 new TempBanForBadComportment(this),
                 new TempBanForXRayCommand(this)
         };
+
+        this.warps = new HashMap<>();
     }
 
-    public Path getWarpsDirectory() {
-        return this.configPath.toAbsolutePath().normalize().resolve("Warps");
+    public Map<String, Warp> getWarps() {
+        return this.warps;
     }
 
-    public Set<Warp> getWarps() {
-        return warp;
+    public Path getWarpsFile() {
+        return this.configPath.toAbsolutePath().normalize().resolve("warps.json");
     }
 
     @Listener
     public void reload(GameReloadEvent event) {
-        this.saveWarp();
-        this.loadWarp();
+        this.saveWarps();
+        this.loadWarps();
     }
-
 
     @Listener
     public void preInit(GamePreInitializationEvent evt) {
-
-        logger.debug("Registering commands...");
+        this.logger.debug("Registering commands...");
 
         for (Command command : this.commands) {
-            logger.trace("Loading command {}", String.join("/", command.getNames()));
+            this.logger.trace("Registering command {}", String.join("/", command.getNames()));
 
             Sponge.getCommandManager().register(this, command.createCommand(), command.getNames());
         }
-        this.loadWarp();
-        WarpsName.add(this.warp.toString());
-    }
 
+        this.logger.debug("Registered {} commands.", this.commands.length);
+
+        this.loadWarps();
+    }
 
     @Listener
     public void serverStopping(GameStoppingServerEvent event) {
-        this.saveWarp();
+        this.saveWarps();
     }
 
-    //Warp
-    //WarpSet
-    public Set<Warp> getWarpsSet() {
-        return warp;
-    }
-
-    public void saveWarp() {
-        Path directory = this.getWarpsDirectory();
+    public void saveWarps() {
+        Path warpsFile = this.getWarpsFile();
 
         try {
-            logger.info("Saving warp...");
+            this.logger.info("Saving warps...");
 
-            for (Warp warp : this.warp) {
-                warp.save(directory);
+            Path parentDir = warpsFile.getParent();
+
+            if (!Files.isDirectory(parentDir)) {
+                Files.createDirectories(parentDir);
             }
 
-            logger.info("{} warp saved!", this.warp.size());
+            try (Writer writer = Files.newBufferedWriter(warpsFile)) {
+                GSON.toJson(this.warps.values(), writer);
+            }
+
+            this.logger.info("Successfully saved {} warps!", this.warps.size());
         }
         catch (IOException e) {
-            logger.error("Couldn't save warp:", e);
+            this.logger.error("Unable to save warps:", e);
         }
     }
 
-    public void loadWarp() {
-        Path directory = this.getWarpsDirectory();
+    public void loadWarps() {
+        Path warpsFile = this.getWarpsFile();
 
-        logger.info("Loading warp...");
+        this.logger.info("Loading warps...");
 
-        try {
-            if (!Files.isDirectory(directory)) {
-                logger.warn("No directory found at '{}', creating...", directory);
+        if (Files.notExists(warpsFile)) {
+            this.logger.info("No warp loaded since the file containing the warps does not exists!");
+            return;
+        }
 
-                Files.createDirectories(directory);
-            }
-            this.warp = Warp.loadAll(directory);
-            logger.info("{} warp loaded!", this.warp.size());
+        try (Reader reader = Files.newBufferedReader(warpsFile)) {
+            Warp[] warps = GSON.fromJson(reader, Warp[].class);
+
+            this.warps.putAll(Arrays.stream(warps).collect(Collectors.toMap(Warp::getName, Function.identity())));
         }
         catch (IOException e) {
-            logger.error("Couldn't load files in {} directory!", directory, e);
+            this.logger.error("Unable to load warps:", e);
         }
     }
-
-    public void delWarp(String fileName) {
-        Path directory = this.getWarpsDirectory();
-
-        try {
-            logger.info("deleting the warp...");
-
-            for (Warp warp : this.warp) {
-                warp.delete(fileName, directory);
-            }
-
-            logger.info("the warp " + fileName + " has been deleted");
-        }
-        catch (IOException e) {
-            logger.error("Couldn't delete warp:", e);
-        }
-    }
-
 }
-

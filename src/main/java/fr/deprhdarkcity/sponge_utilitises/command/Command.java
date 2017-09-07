@@ -1,4 +1,4 @@
-package fr.deprhdarkcity.sponge_utilitises.comand;
+package fr.deprhdarkcity.sponge_utilitises.command;
 
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
