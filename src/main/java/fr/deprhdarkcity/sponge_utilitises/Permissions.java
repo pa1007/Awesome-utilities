@@ -28,7 +28,7 @@ public final class Permissions {
     public static final String BAN_COMMAND = "fr.deprhdarkcity.sponge_utilitises.ban_command";
 
     /**
-     * Permission for TempBan a plater with choices.
+     * Permission for TempBan a player with choices.
      */
     public static final String TEMP_BAN_COMMAND = "fr.deprhdarkcity.sponge_utilitises.temp_ban_command";
 
