@@ -74,6 +74,12 @@ public class TeleportCommand extends AbstractCommand {
 
             if (destWorld.isPresent()) {
                 player.setLocation(new Location<>(destWorld.get(), matchingWarp.getPosition()));
+                src.sendMessage(Text.of(
+                        TextColors.RED,
+                        "[warp] : ",
+                        TextColors.RESET,
+                        "You have been teleported to the warp " + warpName + " !"
+                ));
             }
             else {
                 src.sendMessage(Text.of(
