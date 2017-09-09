@@ -37,7 +37,7 @@ public class BanForHacksCommand extends AbstractCommand {
                 .arguments(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))))
                 .permission(Permissions.BAN_COMMAND)
-                .description(Text.of("Ban player with a given reason"))
+                .description(Text.of("Ban player with a given Reason"))
                 .executor(this)
                 .build();
     }
@@ -48,7 +48,7 @@ public class BanForHacksCommand extends AbstractCommand {
         Player     admin   = ((Player) src);
         BanService service = Sponge.getServiceManager().provide(BanService.class).get();
         Ban ban = Ban.builder().type(BanTypes.PROFILE).profile(user.getProfile())
-                .reason(Text.of("Hacks, plz go to The website to see the exact reason")).source(src).build();
+                .reason(Text.of("Hacks, plz go to The website to see the exact Reason")).source(src).build();
         try {
             service.addBan(ban);
             if (service.hasBan(ban)){

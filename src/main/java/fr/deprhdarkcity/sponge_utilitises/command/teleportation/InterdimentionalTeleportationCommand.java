@@ -15,7 +15,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public class InterdimentionalTeleportationCommand extends AbstractCommand{
+public class InterdimentionalTeleportationCommand extends AbstractCommand {
 
     public InterdimentionalTeleportationCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
@@ -39,15 +39,26 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand{
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        if(src instanceof Player) {
+        if (src instanceof Player) {
             Player          source              = (Player) src;
             Player          destination         = args.<Player>getOne(Text.of("player")).get();
             Location<World> destinationLocation = destination.getLocation().copy();
-                source.setLocation(destinationLocation);
-                src.sendMessage(Text.of(TextColors.RED,"[TP] : ", TextColors.RESET , "You have been teleported to the player"));
+            source.setLocation(destinationLocation);
+            src.sendMessage(Text.of(
+                    TextColors.RED,
+                    "[TP] : ",
+                    TextColors.RESET,
+                    "You have been teleported to the player"
+            ));
             return CommandResult.success();
-        }else {
-            src.sendMessage(Text.of(TextColors.RED,"[TP] : ", TextColors.RESET , "You must be a player to be teleported " ));
+        }
+        else {
+            src.sendMessage(Text.of(
+                    TextColors.RED,
+                    "[TP] : ",
+                    TextColors.RESET,
+                    "You must be a player to be teleported "
+            ));
             return CommandResult.empty();
         }
 

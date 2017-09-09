@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.deprhdarkcity.sponge_utilitises.command.Command;
 import fr.deprhdarkcity.sponge_utilitises.command.ban.*;
+import fr.deprhdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.CreateCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.DeleteCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.TeleportCommand;
@@ -49,6 +51,8 @@ public class SpongeUtilities {
 
     private final Map<String, Warp> warps;
 
+    private final Map<String, Warn> warn;
+
 
     public SpongeUtilities() {
         this.commands = new Command[]{
@@ -61,18 +65,29 @@ public class SpongeUtilities {
                 new BanForXRayCommand(this),
                 new TempBanForHacksCommand(this),
                 new TempBanForBadComportment(this),
-                new TempBanForXRayCommand(this)
+                new TempBanForXRayCommand(this),
+                new WarnCommand(this),
+                new BroadcastCommand(this)
         };
 
         this.warps = new HashMap<>();
+        this.warn = new HashMap<>();
     }
 
     public Map<String, Warp> getWarps() {
         return this.warps;
     }
 
+    public Map<String, Warn> getWarn() {
+        return this.warn;
+    }
+
     public Path getWarpsFile() {
         return this.configPath.toAbsolutePath().normalize().resolve("warps.json");
+    }
+
+    public Path getWarnFile() {
+        return this.configPath.toAbsolutePath().normalize().resolve("warn.json");
     }
 
     @Listener
@@ -141,6 +156,28 @@ public class SpongeUtilities {
         }
         catch (IOException e) {
             this.logger.error("Unable to load warps:", e);
+        }
+    }
+    public void addNewWarn() {
+        Path warnFile = this.getWarnFile();
+
+        try {
+            this.logger.info("Creating a new warn...");
+
+            Path parentDir = warnFile.getParent();
+
+            if (!Files.isDirectory(parentDir)) {
+                Files.createDirectories(parentDir);
+            }
+
+            try (Writer writer = Files.newBufferedWriter(warnFile)) {
+                GSON.toJson(this.warn.values(), writer);
+            }
+
+            this.logger.info("Successfully creating a new warn, there is {} warn!", this.warn.size());
+        }
+        catch (IOException e) {
+            this.logger.error("Unable to create warn:", e);
         }
     }
 }

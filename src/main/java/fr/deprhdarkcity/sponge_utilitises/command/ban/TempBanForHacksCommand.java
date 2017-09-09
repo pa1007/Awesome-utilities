@@ -36,7 +36,7 @@ public class TempBanForHacksCommand extends AbstractCommand {
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.onlyOne(GenericArguments.longNum(Text.of("Time in second"))))
                 .permission(Permissions.TEMP_BAN_COMMAND)
-                .description(Text.of("Temp Ban player with a given reason"))
+                .description(Text.of("Temp Ban player with a given Reason"))
                 .executor(this)
                 .build();
     }
@@ -46,18 +46,18 @@ public class TempBanForHacksCommand extends AbstractCommand {
     public CommandResult execute(CommandSource src, CommandContext args) {
         Player     user  = args.<Player>getOne(Text.of("player")).get();
         Player     admin = ((Player) src);
-     Long time           = args.<Long>getOne(Text.of("Time in second")).get();
-        Instant now1 = Instant.now();
-        Instant Expiration = Instant.now().plusSeconds(time);
+        Long time           = args.<Long>getOne(Text.of("Time in second")).get();
+        Instant now = Instant.now();
+        Instant expiration = Instant.now().plusSeconds(time);
 
         BanService service = Sponge.getServiceManager().provide(BanService.class).get();
-        Ban ban = Ban.builder().type(BanTypes.PROFILE).profile(user.getProfile()).expirationDate(Expiration).startDate(now1)
-                .reason(Text.of("Hacks, plz go to The website to see the exact reason")).source(src).build();
+        Ban ban = Ban.builder().type(BanTypes.PROFILE).profile(user.getProfile()).expirationDate(expiration).startDate(now)
+                .reason(Text.of("Hacks, plz go to The website to see the exact Reason")).source(src).build();
         try {
             service.addBan(ban);
             if (service.hasBan(ban)){
                 src.sendMessage(Text.of("The player ", user.getName(), " has been ban"));
-                user.kick(Text.of("You have been banned for usage of hacks for",Expiration ," , plz go to the web site "));
+                user.kick(Text.of("You have been banned for usage of hacks for",expiration ," , plz go to the web site "));
                 return CommandResult.success();
             }else {
                 src.sendMessage(Text.of("The player ", user.getName(), " Has not been ban plz retry"));
