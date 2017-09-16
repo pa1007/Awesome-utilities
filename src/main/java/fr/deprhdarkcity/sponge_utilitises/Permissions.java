@@ -46,7 +46,7 @@ public final class Permissions {
     /**
      * Permission for getting the warp list.
      */
-    public static final String LIST_WARP = "fr.deprhdarkcity.sponge_utilitises.list_wa_rp";
+    public static final String LIST_WARP = "fr.deprhdarkcity.sponge_utilitises.list_warp";
 
     private Permissions() {}
 }

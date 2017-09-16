@@ -64,9 +64,11 @@ public class TeleportCommand extends AbstractCommand {
         Warp   matchingWarp = this.pluginInstance.getWarps().get(warpName);
 
         if (matchingWarp == null) {
-            src.sendMessage(
-                    Text.of(TextColors.RED, "[warp] : ", TextColors.RESET, "The warp ", warpName, " was not found!")
-            );
+            src.sendMessages(
+                    Text.of(TextColors.RED, "[warp] : ", TextColors.RESET, "The warp ", warpName, " was not found!, plz retry with : "),
+                    Text.of(
+            TextColors.GOLD, pluginInstance.getWarps().keySet().toString()
+            ));
         }
         else {
 
@@ -86,7 +88,7 @@ public class TeleportCommand extends AbstractCommand {
                         TextColors.RED,
                         "[warp] : ",
                         TextColors.RESET,
-                        "Error: the warp references a non-existing world!"
+                        "Error: the warp references a non-existing world ! "
                 ));
             }
         }

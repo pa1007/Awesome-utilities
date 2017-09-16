@@ -50,6 +50,10 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand {
                     TextColors.RESET,
                     "You have been teleported to the player"
             ));
+            destination.sendMessage(Text.of(TextColors.RED,
+                                            "[TP] : ", TextColors.RESET, "The player ", source.getName(),
+                                            " has been teleported to you "
+            ));
             return CommandResult.success();
         }
         else {
