@@ -43,5 +43,10 @@ public final class Permissions {
      */
     public static final String BROADCAST_COMMAND = "fr.deprhdarkcity.sponge_utilitises.broadcast_command";
 
+    /**
+     * Permission for getting the warp list.
+     */
+    public static final String LIST_WARP = "fr.deprhdarkcity.sponge_utilitises.list_wa_rp";
+
     private Permissions() {}
 }

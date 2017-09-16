@@ -9,6 +9,7 @@ import fr.deprhdarkcity.sponge_utilitises.command.teleportation.Interdimentional
 import fr.deprhdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.CreateCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.DeleteCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.warp.ListCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.TeleportCommand;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "utilises",
         name = "SpongeUtilities",
-        version = "1.0",
+        version = "1.1",
         url = "http://depthdarkcity.fr/",
         description = "This plugin is made for Tazmarkill , created for depthdarkcity.fr",
         authors = {"pa1007"})
@@ -67,7 +68,8 @@ public class SpongeUtilities {
                 new TempBanForBadComportment(this),
                 new TempBanForXRayCommand(this),
                 new WarnCommand(this),
-                new BroadcastCommand(this)
+                new BroadcastCommand(this),
+                new ListCommand(this)
         };
 
         this.warps = new HashMap<>();
