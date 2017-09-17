@@ -7,10 +7,7 @@ import fr.deprhdarkcity.sponge_utilitises.command.ban.*;
 import fr.deprhdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warn.WarnCommand;
-import fr.deprhdarkcity.sponge_utilitises.command.warp.CreateCommand;
-import fr.deprhdarkcity.sponge_utilitises.command.warp.DeleteCommand;
-import fr.deprhdarkcity.sponge_utilitises.command.warp.ListCommand;
-import fr.deprhdarkcity.sponge_utilitises.command.warp.TeleportCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.warp.*;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -33,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "utilises",
         name = "SpongeUtilities",
-        version = "1.1",
+        version = "2.0",
         url = "http://depthdarkcity.fr/",
         description = "This plugin is made for Tazmarkill , created for depthdarkcity.fr",
         authors = {"pa1007"})
@@ -57,19 +54,11 @@ public class SpongeUtilities {
 
     public SpongeUtilities() {
         this.commands = new Command[]{
-                new CreateCommand(this),
-                new TeleportCommand(this),
-                new DeleteCommand(this),
                 new InterdimentionalTeleportationCommand(this),
-                new BanForHacksCommand(this),
-                new BanForBadComportementCommand(this),
-                new BanForXRayCommand(this),
-                new TempBanForHacksCommand(this),
-                new TempBanForBadComportment(this),
-                new TempBanForXRayCommand(this),
+                new BanCommand(this),
+                new TempBanCommand(this),
                 new WarnCommand(this),
-                new BroadcastCommand(this),
-                new ListCommand(this)
+                new BroadcastCommand(this)
         };
 
         this.warps = new HashMap<>();
@@ -111,6 +100,7 @@ public class SpongeUtilities {
         this.logger.debug("Registered {} commands.", this.commands.length);
 
         this.loadWarps();
+        Sponge.getCommandManager().register(this, new WarpCommand(this).cmdWarp, "warps");
     }
 
     @Listener
@@ -160,6 +150,7 @@ public class SpongeUtilities {
             this.logger.error("Unable to load warps:", e);
         }
     }
+
     public void addNewWarn() {
         Path warnFile = this.getWarnFile();
 

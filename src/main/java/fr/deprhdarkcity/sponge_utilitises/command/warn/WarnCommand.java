@@ -4,6 +4,7 @@ import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.deprhdarkcity.sponge_utilitises.Warn;
 import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.ban.Reason;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -16,8 +17,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Title;
 import java.time.Instant;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 public class WarnCommand extends AbstractCommand {
 
@@ -36,7 +36,10 @@ public class WarnCommand extends AbstractCommand {
                 .arguments(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.onlyOne(GenericArguments.enumValue(
-                                Text.of("Reason"), Reason.class)))
+                                Text.of("Reason"), Reason.class)),
+                        GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("Other reason"))
+                        )
+                )
                 .permission(Permissions.WARN_COMMAND)
                 .description(Text.of("Warn a player for doing something bad "))
                 .executor(this)
@@ -45,43 +48,70 @@ public class WarnCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        Player warned = args.<Player>getOne(Text.of("player")).get();
-        warned.sendTitle(Title.of(Text.of(TextColors.RED, "You have been warned by ", src.getName())));
-        warned.sendTitle(Title.update().subtitle(Text.of(
-                TextColors.GOLD,
-                "For ",
-                args.<String>getOne(Text.of("Reason")).get()
-        )).build());
-        Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                TextColors.RED,
-                "[Broadcast] : ",
-                TextColors.RESET,
-                "The player ",
-                warned.getName(),
-                " Has been warn for ",
-                args.<String>getOne(Text.of("Reason")).get()
-        ));
-        Player admin = (Player) src;
-        Date   now   = Date.from(Instant.now());
-        Warn warn = new Warn(
-                warned.getUniqueId(),
-                admin.getUniqueId(),
-                args.<Reason>getOne(Text.of("Reason")).get().name(),
-                now
-        );
+        Player           warned = args.<Player>getOne(Text.of("player")).get();
+        if (Objects.equals(args.<String>getOne(Text.of("Reason")).get(), Reason.OTHER)) {
+            if (!args.<String>getOne(Text.of("Other reason")).isPresent()){
+                src.sendMessage(Text.of(TextColors.RED,"You have chose the reason \"other\" you must leave the reason !"));
+                return CommandResult.empty();
+            }else {
+                String reason = args.<String>getOne(Text.of("Optional reason")).get();
+                warned.sendTitle(Title.of(Text.of(TextColors.RED, "You have been warned by ", src.getName())));
+                warned.sendTitle(Title.update().subtitle(Text.of(
+                        TextColors.GOLD,
+                        "For ",
+                        reason
+                )).build());
+                Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
+                        TextColors.RED,
+                        "[Broadcast] : ",
+                        TextColors.RESET,
+                        "The player ",
+                        warned.getName(),
+                        " Has been warn for ",
+                        args.<String>getOne(Text.of("Reason")).get()," ",reason
+                ));
+                Player admin = (Player) src;
+                Date   now   = Date.from(Instant.now());
+                Warn warn = new Warn(
+                        warned.getUniqueId(),
+                        admin.getUniqueId(),
+                        reason ,
+                        now
+                );
+                this.pluginInstance.getWarn().put(UUID.randomUUID().toString(), warn);
+                this.pluginInstance.addNewWarn();
+                return CommandResult.success();
+            }
+        }
+        else {
+            warned.sendTitle(Title.of(Text.of(TextColors.RED, "You have been warned by ", src.getName())));
+            warned.sendTitle(Title.update().subtitle(Text.of(
+                    TextColors.GOLD,
+                    "For ",
+                    args.<String>getOne(Text.of("Reason")).get()
+            )).build());
+            Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
+                    TextColors.RED,
+                    "[Broadcast] : ",
+                    TextColors.RESET,
+                    "The player ",
+                    warned.getName(),
+                    " Has been warn for ",
+                    args.<String>getOne(Text.of("Reason")).get()
+            ));
+            Player admin = (Player) src;
+            Date   now   = Date.from(Instant.now());
+            Warn warn = new Warn(
+                    warned.getUniqueId(),
+                    admin.getUniqueId(),
+                    args.<Reason>getOne(Text.of("Reason")).get().name(),
+                    now
+            );
 
-        this.pluginInstance.getWarn().put(UUID.randomUUID().toString(), warn);
-        this.pluginInstance.addNewWarn();
-        return CommandResult.success();
+            this.pluginInstance.getWarn().put(UUID.randomUUID().toString(), warn);
+            this.pluginInstance.addNewWarn();
+            return CommandResult.success();
+        }
 
-    }
-
-    public enum Reason {
-        HACKS,
-        CHEAT,
-        X_RAY,
-        Bad_Comportment,
-        SERVER_ADVERTASING,
-        TROLL
     }
 }
