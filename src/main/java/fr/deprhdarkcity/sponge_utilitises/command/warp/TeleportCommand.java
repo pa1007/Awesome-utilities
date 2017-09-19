@@ -1,12 +1,15 @@
 package fr.deprhdarkcity.sponge_utilitises.command.warp;
 
+import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.deprhdarkcity.sponge_utilitises.Warp;
+import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -14,12 +17,11 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import java.util.Optional;
 
-public class CMDtp implements CommandExecutor {
+public class TeleportCommand extends AbstractCommand {
 
-    protected final SpongeUtilities pluginInstance;
-
-    public CMDtp(SpongeUtilities pluginInstance) {
-        this.pluginInstance = pluginInstance;}
+    public TeleportCommand(SpongeUtilities spongeUtilities) {
+        super(spongeUtilities);
+    }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) {
@@ -53,7 +55,6 @@ public class CMDtp implements CommandExecutor {
             );
         }
         else {
-
             Optional<World> destWorld = Sponge.getGame().getServer().getWorld(matchingWarp.getWorldName());
 
             if (destWorld.isPresent()) {
@@ -76,5 +77,20 @@ public class CMDtp implements CommandExecutor {
         }
 
         return CommandResult.success();
+    }
+
+    @Override
+    public String[] getNames() {
+        return new String[]{"teleport", "tp"};
+    }
+
+    @Override
+    public CommandSpec createCommand() {
+        return CommandSpec.builder()
+                .description(Text.of("teleport to a warp"))
+                .permission(Permissions.TELEPORT_WARP)
+                .executor(new TeleportCommand(pluginInstance))
+                .arguments(GenericArguments.string(Text.of("The warp's name")))
+                .build();
     }
 }

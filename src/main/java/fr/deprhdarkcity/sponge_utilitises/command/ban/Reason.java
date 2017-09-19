@@ -4,8 +4,8 @@ public enum Reason {
     HACKS,
     CHEAT,
     X_RAY,
-    Bad_Comportment,
-    SERVER_ADVERTASING,
+    BAD_BEHAVIOUR,
+    SERVER_ADVERTISING,
     TROLL,
     OTHER
 }

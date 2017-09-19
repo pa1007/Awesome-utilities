@@ -1,19 +1,22 @@
 package fr.deprhdarkcity.sponge_utilitises.command.warp;
 
+import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
+import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-public class CMDDelete implements CommandExecutor {
+public class DeleteCommand extends AbstractCommand {
 
-    protected final SpongeUtilities pluginInstance;
-
-    public CMDDelete(SpongeUtilities pluginInstance) {this.pluginInstance = pluginInstance;}
+    public DeleteCommand(SpongeUtilities spongeUtilities) {
+        super(spongeUtilities);
+    }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -33,5 +36,20 @@ public class CMDDelete implements CommandExecutor {
         }
 
         return CommandResult.empty();
+    }
+
+    @Override
+    public String[] getNames() {
+        return new String[]{"delete", "d"};
+    }
+
+    @Override
+    public CommandSpec createCommand() {
+        return CommandSpec.builder()
+                .description(Text.of("Delete a warp"))
+                .arguments(GenericArguments.string(Text.of("The warp's name")))
+                .permission(Permissions.DELETE_WARP)
+                .executor(this)
+                .build();
     }
 }

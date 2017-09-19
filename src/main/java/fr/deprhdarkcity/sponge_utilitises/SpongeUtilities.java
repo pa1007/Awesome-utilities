@@ -3,11 +3,12 @@ package fr.deprhdarkcity.sponge_utilitises;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.deprhdarkcity.sponge_utilitises.command.Command;
-import fr.deprhdarkcity.sponge_utilitises.command.ban.*;
+import fr.deprhdarkcity.sponge_utilitises.command.ban.BanCommand;
+import fr.deprhdarkcity.sponge_utilitises.command.ban.TempBanCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warn.WarnCommand;
-import fr.deprhdarkcity.sponge_utilitises.command.warp.*;
+import fr.deprhdarkcity.sponge_utilitises.command.warp.WarpCommand;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Plugin(id = "utilises",
+@Plugin(id = "sponge_utilities",
         name = "SpongeUtilities",
         version = "2.0",
         url = "http://depthdarkcity.fr/",
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
         authors = {"pa1007"})
 public class SpongeUtilities {
 
-    static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
     @Inject
     @ConfigDir(sharedRoot = false)
@@ -58,7 +59,8 @@ public class SpongeUtilities {
                 new BanCommand(this),
                 new TempBanCommand(this),
                 new WarnCommand(this),
-                new BroadcastCommand(this)
+                new BroadcastCommand(this),
+                new WarpCommand(this)
         };
 
         this.warps = new HashMap<>();
@@ -100,7 +102,6 @@ public class SpongeUtilities {
         this.logger.debug("Registered {} commands.", this.commands.length);
 
         this.loadWarps();
-        Sponge.getCommandManager().register(this, new WarpCommand(this).cmdWarp, "warps");
     }
 
     @Listener
