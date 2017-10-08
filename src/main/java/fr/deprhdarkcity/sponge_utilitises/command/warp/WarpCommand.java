@@ -1,5 +1,6 @@
 package fr.deprhdarkcity.sponge_utilitises.command.warp;
 
+import fr.deprhdarkcity.sponge_utilitises.Permissions;
 import fr.deprhdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.deprhdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.Command;
@@ -43,13 +44,16 @@ public class WarpCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
-        src.sendMessage(Text.of(
-                TextColors.RED,
-                "[warp] : ",
-                TextColors.RESET,
-                "Usage: /warp [teleport|delete|create|list]!"
-        ));
+        if(src.hasPermission(Permissions.TELEPORT_WARP) ||src.hasPermission(Permissions.DELETE_WARP) || src.hasPermission(Permissions.LIST_WARP) || src.hasPermission(Permissions.CREATE_WARP)){
+            src.sendMessage(Text.of(
+                    TextColors.RED,
+                    "[warp] : ",
+                    TextColors.RESET,
+                    "Usage: /warp [teleport|delete|create|list]!"
+            ));
+        }else {
+            throw new CommandException(Text.of("You don't have the permission to execute this command"));
+        }
 
         return CommandResult.empty();
     }

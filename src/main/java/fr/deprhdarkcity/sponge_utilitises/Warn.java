@@ -52,7 +52,7 @@ public class Warn {
      *
      * @since 1.0
      */
-    private String reason;
+    private String reasons;
 
     public Warn() { }
 
@@ -64,7 +64,7 @@ public class Warn {
     ) {
         this.playerUUID = playerUUID;
         this.adminUUID = adminUUID;
-        this.reason = reason;
+        this.reasons = reason;
         this.now = now;
     }
 
@@ -72,18 +72,18 @@ public class Warn {
      * @return Get the Reason why the player is warn.
      * @since 1.0
      */
-    public String getReason() {
-        return this.reason;
+    public String getReasons() {
+        return this.reasons;
     }
 
     /**
      * Sets the <code>Reason</code> field.
      *
-     * @param reason Get the Reason why the player is warn.
+     * @param reasons Get the Reason why the player is warn.
      * @since 1.0
      */
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setReasons(String reasons) {
+        this.reasons = reasons;
     }
 
     /**
@@ -134,12 +134,12 @@ public class Warn {
         return Objects.equals(playerUUID, warn.playerUUID) &&
                Objects.equals(now, warn.now) &&
                Objects.equals(adminUUID, warn.adminUUID) &&
-               Objects.equals(reason, warn.reason);
+               Objects.equals(reasons, warn.reasons);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerUUID, now, adminUUID, reason);
+        return Objects.hash(playerUUID, now, adminUUID, reasons);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class Warn {
         return com.google.common.base.Objects.toStringHelper(this)
                 .add("warnPlayerUUID", playerUUID)
                 .add("adminUUID", adminUUID)
-                .add("Reason", reason)
+                .add("Reasons", reasons)
                 .add("Date",now)
                 .toString();
     }

@@ -27,7 +27,7 @@ public class TempBanCommand extends AbstractCommand {
 
     @Override
     public String[] getNames() {
-        return new String[]{"tempbanfor"};
+        return new String[]{"tempban"};
     }
 
     @Override

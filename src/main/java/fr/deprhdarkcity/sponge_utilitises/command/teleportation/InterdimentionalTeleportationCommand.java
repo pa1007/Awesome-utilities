@@ -32,7 +32,7 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand {
                 .arguments(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))))
                 .permission(Permissions.INTERDIMENTIONAL_TELEPORT)
-                .description(Text.of("Create a warp"))
+                .description(Text.of("tp to a player"))
                 .executor(this)
                 .build();
     }

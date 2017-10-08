@@ -63,11 +63,11 @@ public class CreateCommand extends AbstractCommand {
         else {
             src.sendMessages(
                     Text.of("The warp with this name already exist, if you want to delete him ,plz do : "),
-                    Text.builder("/delwarp <WarpName>").color(TextColors.RED).onClick(
-                            TextActions.runCommand("/warps del " + warpName)).build(),
+                    Text.builder("/warp d <WarpName>").color(TextColors.RED).onClick(
+                            TextActions.runCommand("/warp delete " + warpName)).build(),
                     Text.of(TextColors.RESET, "or"),
-                    Text.builder("/tpw <Warpname>").color(TextColors.RED).onClick(
-                            TextActions.runCommand("/warps tp " + warpName)).build()
+                    Text.builder("/warp tp <Warpname>").color(TextColors.RED).onClick(
+                            TextActions.runCommand("/warp tp " + warpName)).build()
             );
 
             return CommandResult.empty();
