@@ -17,10 +17,12 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.title.Title;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 public class CreateWarn extends AbstractCommand {
-   // Map<UUID,List<Warn>> warnss = this.pluginInstance.getWarn();
 
     public CreateWarn(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
@@ -50,6 +52,7 @@ public class CreateWarn extends AbstractCommand {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player warned = args.<Player>getOne(Text.of("player")).get();
+
         if (Objects.equals(args.<String>getOne(Text.of("Reason")).get(), Reason.OTHER)) {
             if (!args.<String>getOne(Text.of("Other reason")).isPresent()) {
                 src.sendMessage(Text.of(
@@ -84,11 +87,14 @@ public class CreateWarn extends AbstractCommand {
                         now
                 );
 
-                List<Warn> warns = this.pluginInstance.warns.computeIfAbsent(warn.getPlayerUUID(), uuid -> new ArrayList<>());
+                List<Warn> warns = this.pluginInstance.warns.computeIfAbsent(
+                        warn.getPlayerUUID(),
+                        uuid -> new ArrayList<>()
+                );
 
                 warns.add(warn);
-                this.pluginInstance.getWarn().put(warned.getUniqueId(),warns);
-                this.pluginInstance.addNewWarn();
+                this.pluginInstance.getWarn().put(warned.getUniqueId(), warns);
+                this.pluginInstance.saveWarns();
                 return CommandResult.success();
             }
         }
@@ -118,11 +124,14 @@ public class CreateWarn extends AbstractCommand {
             );
 
 
-                List<Warn> warns = this.pluginInstance.warns.computeIfAbsent(warn.getPlayerUUID(), uuid -> new ArrayList<>());
+            List<Warn> warns = this.pluginInstance.warns.computeIfAbsent(
+                    warn.getPlayerUUID(),
+                    uuid -> new ArrayList<>()
+            );
 
-                warns.add(warn);
-                this.pluginInstance.getWarn().put(warned.getUniqueId(),warns);
-                this.pluginInstance.addNewWarn();
+            warns.add(warn);
+            this.pluginInstance.getWarn().put(warned.getUniqueId(), warns);
+            this.pluginInstance.saveWarns();
             return CommandResult.success();
         }
     }

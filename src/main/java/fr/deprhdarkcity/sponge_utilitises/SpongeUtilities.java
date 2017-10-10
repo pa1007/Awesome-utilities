@@ -16,14 +16,11 @@ import fr.deprhdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.deprhdarkcity.sponge_utilitises.command.warp.WarpCommand;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.text.Text;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.Reader;
@@ -43,18 +40,27 @@ import java.util.stream.Collectors;
 public class SpongeUtilities {
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-    public final  Map<UUID, List<Warn>> warns;
+
+    public final Map<UUID, List<Warn>> warns;
+
     @Inject
     @ConfigDir(sharedRoot = false)
-    private       Path                  configPath;
+    private Path configPath;
+
     @Inject
-    private       Logger                logger;
-    private final Command[]             commands;
-    private final Map<String, Warp>     warps;
-    private final Map<String, Integer>  choices;
-    private       Boolean               closed;
-    private       Boolean               deletable;
-    private final Set<UUID>             voter;
+    private Logger logger;
+
+    private final Command[] commands;
+
+    private final Map<String, Warp> warps;
+
+    private final Map<String, Integer> choices;
+
+    private Boolean closed;
+
+    private Boolean deletable;
+
+    private final Set<UUID> voter;
 
     public SpongeUtilities() {
         this.commands = new Command[]{
@@ -94,16 +100,16 @@ public class SpongeUtilities {
         return this.configPath.toAbsolutePath().normalize().resolve("warps.json");
     }
 
-    public Path getWarnFile() {
+    public Path getWarnsFile() {
         return this.configPath.toAbsolutePath().normalize().resolve("warn.json");
     }
 
     @Listener
     public void reload(GameReloadEvent event) {
         this.saveWarps();
-        this.addNewWarn();
+        this.saveWarns();
         this.loadWarps();
-        this.loadWarn();
+        this.loadWarns();
         this.deleteVote();
     }
 
@@ -120,14 +126,8 @@ public class SpongeUtilities {
         this.logger.debug("Registered {} commands.", this.commands.length);
 
         this.loadWarps();
-        this.loadWarn();
+        this.loadWarns();
         this.deleteVote();
-
-    }
-
-    @Listener
-    public void serverStopping(GameStoppingServerEvent event) {
-        this.saveWarps();
     }
 
     public void saveWarps() {
@@ -173,8 +173,8 @@ public class SpongeUtilities {
         }
     }
 
-    public void addNewWarn() {
-        Path warnFile = this.getWarnFile();
+    public void saveWarns() {
+        Path warnFile = this.getWarnsFile();
 
         try {
             this.logger.info("Creating a new warn...");
@@ -186,41 +186,43 @@ public class SpongeUtilities {
             }
 
             try (Writer writer = Files.newBufferedWriter(warnFile)) {
-                GSON.toJson(this.warns.values(), writer);
+                GSON.toJson(this.warns.values().stream().flatMap(List::stream).toArray(), writer);
             }
 
-            this.logger.info("Successfully creating a new warn, there is {} warn!", this.warns.size());
+            this.logger.info("Successfully creating a new warn!");
         }
         catch (IOException e) {
             this.logger.error("Unable to create warn:", e);
         }
     }
 
-    public void loadWarn() {
-        Path warnFile = this.getWarnFile();
+    public void loadWarns() {
+        Path warnsFile = this.getWarnsFile();
 
-        this.logger.info("Loading warn...");
+        this.logger.info("Loading warns...");
 
-        if (Files.notExists(warnFile)) {
+        if (Files.notExists(warnsFile)) {
             this.logger.info("No warn loaded since the file containing the warns does not exists!");
             return;
         }
 
-        try (Reader reader = Files.newBufferedReader(warnFile)) {
+        try (Reader reader = Files.newBufferedReader(warnsFile)) {
             Warn[] warnsList = GSON.fromJson(reader, Warn[].class);
-
 
             for (Warn warn : warnsList) {
                 List<Warn> warns = this.warns.computeIfAbsent(warn.getPlayerUUID(), uuid -> new ArrayList<>());
 
                 warns.add(warn);
             }
+
+            this.logger.info("{} warns loaded successfully!", warnsList.length);
         }
         catch (IOException e) {
-            this.logger.error("Unable to load warn:", e);
+            this.logger.error("Unable to load warns:", e);
         }
     }
-    public void deleteVote(){
+
+    public void deleteVote() {
         setDeletable(false);
         setClosed(false);
         voter.clear();
