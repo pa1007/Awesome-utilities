@@ -41,6 +41,7 @@ public class SpeedCommand extends AbstractCommand {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player source = (Player) src;
         long   m      = args.<Long>getOne(Text.of("Speed")).get();
+
         if (m > 20 || m < 0) {
             throw new CommandException(Text.of("please add a number between 0 and 20"));
         }
@@ -49,7 +50,6 @@ public class SpeedCommand extends AbstractCommand {
             source.offer(Keys.FLYING_SPEED, 0.05 * m);
             source.sendMessage(Text.of("You have set your speed to ", m));
             return CommandResult.success();
-
         }
         else {
             Player player = args.<Player>getOne(Text.of("Optional player")).get();

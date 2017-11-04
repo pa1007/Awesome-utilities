@@ -46,7 +46,6 @@ public class BanCommand extends AbstractCommand {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player     banned  = args.<Player>getOne(Text.of("Player")).get();
-        Player     admin   = (Player) src;
         BanService service = Sponge.getServiceManager().provide(BanService.class).get();
 
 
