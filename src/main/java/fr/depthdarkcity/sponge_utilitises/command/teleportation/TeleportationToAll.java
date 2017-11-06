@@ -12,7 +12,6 @@ import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import java.util.Collection;
@@ -40,11 +39,11 @@ public class TeleportationToAll extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        Collection<Player> onlinePlayer = Sponge.getServer().getOnlinePlayers();
-        Player             source       = (Player) src;
-        Player[]        players        = onlinePlayer.stream().toArray(Player[]::new);
-        Location<World> sourceLocation = source.getLocation();
-        int             i              = 0;
+        Collection<Player> onlinePlayer   = Sponge.getServer().getOnlinePlayers();
+        Player             source         = (Player) src;
+        Player[]           players        = onlinePlayer.stream().toArray(Player[]::new);
+        Location<World>    sourceLocation = source.getLocation();
+        int                i              = 0;
         if (args.<Player>getOne(Text.of("Player")).isPresent()) {
             Player          player   = args.<Player>getOne(Text.of("Player")).get();
             Location<World> location = player.getLocation();
@@ -57,11 +56,8 @@ public class TeleportationToAll extends AbstractCommand {
                 i++;
             }
             while (players.length > i);
-            Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                    TextColors.RED,
-                    "[Broadcast] : ",
-                    TextColors.RESET, src.getName(), " has teleported everyone to : ", player.getName()
-            ));
+            pluginInstance.broadcast(Text.of(src.getName(), " has teleported everyone to : ", player.getName()));
+
             return CommandResult.success();
         }
         else {
@@ -71,10 +67,7 @@ public class TeleportationToAll extends AbstractCommand {
                 i++;
             }
             while (players.length > i);
-            Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                    TextColors.RED,
-                    "[Broadcast] : ",
-                    TextColors.RESET,
+            pluginInstance.broadcast(Text.of(
                     "everyone have been teleported to ",
                     src.getName()
             ));

@@ -5,7 +5,6 @@ import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.Warn;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.Reason;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -69,15 +68,12 @@ public class CreateWarn extends AbstractCommand {
                         "For ",
                         reason
                 )).build());
-                Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                        TextColors.RED,
-                        "[Broadcast] : ",
-                        TextColors.RESET,
-                        "The player ",
-                        warned.getName(),
-                        " Has been warn for ",
-                        args.<String>getOne(Text.of("Reason")).get(), " ", reason
+                pluginInstance.broadcast(Text.of("The player ",
+                                                 warned.getName(),
+                                                 " Has been warn for ",
+                                                 args.<String>getOne(Text.of("Reason")).get(), " ", reason
                 ));
+
                 Player admin = (Player) src;
                 Date   now   = Date.from(Instant.now());
                 Warn warn = new Warn(
@@ -105,10 +101,7 @@ public class CreateWarn extends AbstractCommand {
                     "For ",
                     args.<String>getOne(Text.of("Reason")).get()
             )).build());
-            Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                    TextColors.RED,
-                    "[Broadcast] : ",
-                    TextColors.RESET,
+            pluginInstance.broadcast(Text.of(
                     "The player ",
                     warned.getName(),
                     " Has been warn for ",

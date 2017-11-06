@@ -6,6 +6,8 @@ import fr.depthdarkcity.sponge_utilitises.command.Command;
 import fr.depthdarkcity.sponge_utilitises.command.ban.BanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.TempBanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
+import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
+import fr.depthdarkcity.sponge_utilitises.command.god.UnGodCommandall;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
 import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilitises.command.stop.StopCommand;
@@ -17,10 +19,16 @@ import fr.depthdarkcity.sponge_utilitises.command.warp.WarpCommand;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.effect.potion.PotionEffectTypes;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.Reader;
@@ -55,6 +63,7 @@ public class SpongeUtilities {
     private final Map<String, Warp> warps;
 
     private final Map<String, Integer> choices;
+    private final Set<UUID>            godded;
 
     private Boolean closed;
 
@@ -74,14 +83,22 @@ public class SpongeUtilities {
                 new TeleportationToAll(this),
                 new StopCommand(this),
                 new HatCommand(this),
-                new VoteCommand(this)
+                new VoteCommand(this),
+                new GodCommand(this),
+                new UnGodCommandall(this)
         };
+
+        this.godded = new HashSet<>();
         this.warps = new HashMap<>();
         this.warns = new HashMap<>();
         this.choices = new HashMap<>();
         this.deletable = Boolean.FALSE;
         this.closed = Boolean.FALSE;
         this.voter = new HashSet<>();
+    }
+
+    public Set<UUID> getGodded() {
+        return godded;
     }
 
     public Map<String, Integer> getChoices() {
@@ -222,11 +239,25 @@ public class SpongeUtilities {
         }
     }
 
+    @Listener
+    public void onDammage(DamageEntityEvent e) {
+        if (e.getTargetEntity() instanceof Player && getGodded().contains(e.getTargetEntity().getUniqueId())) {
+            e.setCancelled(true);
+            e.getTargetEntity().offer(Keys.HEALTH, ((Player) e.getTargetEntity()).maxHealth().getMaxValue());
+        }
+    }
+
     public void deleteVote() {
         setDeletable(false);
         setClosed(false);
         voter.clear();
         choices.clear();
+    }
+
+    public void broadcast(Text text) {
+        Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
+                TextColors.RED,"[Broadcast] : ",TextColors.RESET,
+         text));
     }
 
     public boolean setDeletable(boolean deletables) {

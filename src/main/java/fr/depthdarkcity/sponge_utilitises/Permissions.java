@@ -104,5 +104,15 @@ public final class Permissions {
      */
     public static final String DELETE_VOTE_COMMAND = "fr.deprhdarkcity.sponge_utilitises.delete_vote_command";
 
+    /**
+     * Permission for giving the god power.
+     */
+    public static final String GOD_COMMAND = "fr.depthdarkcity.sponge_utilitises.god_command";
+
+    /**
+     * Permission for deleting the GOD power.
+     */
+    public static final String UNGOD_COMMAND = "fr.depthdarkcity.sponge_utilitises.ungod_command";
+
     private Permissions() {}
 }

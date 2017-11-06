@@ -40,13 +40,7 @@ public class BroadcastCommand extends AbstractCommand {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
         String message = args.<String>getOne(Text.of("message")).orElseThrow(NullPointerException::new);
-
-        Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                TextColors.RED,
-                "[Broadcast] : ",
-                TextColors.RESET,
-                message
-        ));
+        pluginInstance.broadcast(Text.of(message));
 
         return CommandResult.success();
     }

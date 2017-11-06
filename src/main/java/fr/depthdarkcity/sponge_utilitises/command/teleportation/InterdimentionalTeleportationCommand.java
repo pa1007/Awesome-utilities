@@ -30,7 +30,9 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand {
     public CommandSpec createCommand() {
         return CommandSpec.builder()
                 .arguments(
-                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))))
+                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
+                        GenericArguments.optional(GenericArguments.player(Text.of("player to you")))
+                )
                 .permission(Permissions.INTERDIMENTIONAL_TELEPORT)
                 .description(Text.of("tp to a player"))
                 .executor(this)
@@ -39,22 +41,35 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+
         if (src instanceof Player) {
-            Player          source              = (Player) src;
-            Player          destination         = args.<Player>getOne(Text.of("player")).get();
-            Location<World> destinationLocation = destination.getLocation().copy();
-            source.setLocation(destinationLocation);
-            src.sendMessage(Text.of(
-                    TextColors.RED,
-                    "[TP] : ",
-                    TextColors.RESET,
-                    "You have been teleported to the player"
-            ));
-            destination.sendMessage(Text.of(TextColors.RED,
-                                            "[TP] : ", TextColors.RESET, "The player ", source.getName(),
-                                            " has been teleported to you "
-            ));
-            return CommandResult.success();
+            Player source = (Player) src;
+            if (!args.getOne(Text.of("player to you")).isPresent()) {
+
+                Player          destination         = args.<Player>getOne(Text.of("player")).get();
+                Location<World> destinationLocation = destination.getLocation().copy();
+                source.setLocation(destinationLocation);
+                src.sendMessage(Text.of(
+                        TextColors.RED,
+                        "[TP] : ",
+                        TextColors.RESET,
+                        "You have been teleported to the player"
+                ));
+                destination.sendMessage(Text.of(TextColors.RED,
+                                                "[TP] : ", TextColors.RESET, "The player ", source.getName(),
+                                                " has been teleported to you "
+                ));
+                return CommandResult.success();
+            }
+            else {
+                args.<Player>getOne(Text.of("player to you")).get().setLocation(source.getLocation());
+                args.<Player>getOne(Text.of("player to you")).get().sendMessage(Text.of(
+                        TextColors.RED,
+                        "[TP] : ",
+                        TextColors.RESET, "You have been teleported to ", source.getName()
+                ));
+                return CommandResult.success();
+            }
         }
         else {
             src.sendMessage(Text.of(
