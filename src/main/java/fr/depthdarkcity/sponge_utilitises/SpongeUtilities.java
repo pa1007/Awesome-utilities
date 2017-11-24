@@ -13,6 +13,7 @@ import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilitises.command.stop.StopCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.TeleportationToAll;
+import fr.depthdarkcity.sponge_utilitises.command.vanish.VanishCommand;
 import fr.depthdarkcity.sponge_utilitises.command.vote.VoteCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warp.WarpCommand;
@@ -20,7 +21,6 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -85,7 +85,8 @@ public class SpongeUtilities {
                 new HatCommand(this),
                 new VoteCommand(this),
                 new GodCommand(this),
-                new UnGodCommandall(this)
+                new UnGodCommandall(this),
+                new VanishCommand(this)
         };
 
         this.godded = new HashSet<>();
@@ -256,8 +257,9 @@ public class SpongeUtilities {
 
     public void broadcast(Text text) {
         Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                TextColors.RED,"[Broadcast] : ",TextColors.RESET,
-         text));
+                TextColors.RED, "[Broadcast] : ", TextColors.RESET,
+                text
+        ));
     }
 
     public boolean setDeletable(boolean deletables) {

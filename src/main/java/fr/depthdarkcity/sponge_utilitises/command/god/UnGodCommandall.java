@@ -25,7 +25,7 @@ public class UnGodCommandall extends AbstractCommand {
     public CommandSpec createCommand() {
         return CommandSpec.builder()
                 .description(Text.of("For giving the power of God to someone or you"))
-                .permission(Permissions.GOD_COMMAND)
+                .permission(Permissions.UNGOD_COMMAND)
                 .executor(this)
                 .build();
     }

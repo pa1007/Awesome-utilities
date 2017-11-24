@@ -114,5 +114,10 @@ public final class Permissions {
      */
     public static final String UNGOD_COMMAND = "fr.depthdarkcity.sponge_utilitises.ungod_command";
 
+    /**
+     * Permission for geting an total invisibility to a personne.
+     */
+    public static final String VANISH_COMMAND = "fr.depthdarkcity.sponge_utilitises.vanish_command";
+
     private Permissions() {}
 }
