@@ -15,10 +15,8 @@ import org.spongepowered.api.text.format.TextColors;
 
 public class ChooseCommand extends AbstractCommand {
 
-
     public ChooseCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
-
     }
 
     @Override
@@ -38,21 +36,28 @@ public class ChooseCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        Player source = ((Player) src);
+
+        if (!(src instanceof Player)) {
+            throw new CommandException(Text.of("You must be a player in order to do that!"));
+        }
+
+        Player source = (Player) src;
         String vote   = args.<String>getOne(Text.of("Your Vote")).get();
-        if (this.pluginInstance.getChoices().keySet().contains(vote) && !this.pluginInstance.getClosed()) {
+
+        if (this.pluginInstance.getChoices().containsKey(vote) && !this.pluginInstance.getClosed()) {
+
             if (!this.pluginInstance.getVoter().contains(source.getUniqueId())) {
-                Integer a = this.pluginInstance.getChoices().get(vote);
-                a++;
-                this.pluginInstance.getChoices().put(vote, a);
+
+                this.pluginInstance.getChoices().computeIfPresent(vote, (key, val) -> val + 1);
                 this.pluginInstance.getVoter().add(((Player) src).getUniqueId());
+
                 source.sendMessage(Text.of(TextColors.GREEN, "Tou have successfully voted for ", vote));
+
                 return CommandResult.success();
             }
             else {
                 throw new CommandException(Text.of("You have already Voted please wait before voting "));
             }
-
         }
         else if (!this.pluginInstance.getClosed()) {
             throw new CommandException(Text.of("There is no vote yet"));
@@ -62,8 +67,8 @@ public class ChooseCommand extends AbstractCommand {
                     "There is no vote for this try one of this  ",
                     this.pluginInstance.getChoices().keySet()
             ));
-
         }
+
         return CommandResult.empty();
     }
 }

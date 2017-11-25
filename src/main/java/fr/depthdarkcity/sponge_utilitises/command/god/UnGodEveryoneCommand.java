@@ -10,9 +10,9 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
-public class UnGodCommandall extends AbstractCommand {
+public class UnGodEveryoneCommand extends AbstractCommand {
 
-    public UnGodCommandall(SpongeUtilities spongeUtilities) {
+    public UnGodEveryoneCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
     }
 
@@ -31,9 +31,7 @@ public class UnGodCommandall extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(
-            CommandSource src, CommandContext args
-    ) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (pluginInstance.getGodded().isEmpty()) {
             throw new CommandException(Text.of("There is nobody in god mode !"));
         }
@@ -42,6 +40,5 @@ public class UnGodCommandall extends AbstractCommand {
             src.sendMessage(Text.of("You have UnGod everyone"));
             return CommandResult.success();
         }
-
     }
 }

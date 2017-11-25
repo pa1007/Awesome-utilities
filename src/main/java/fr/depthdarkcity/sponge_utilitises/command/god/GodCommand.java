@@ -35,10 +35,10 @@ public class GodCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult execute(
-            CommandSource src, CommandContext args
-    ) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+
         Player source = (Player) src;
+
         if (args.getOne(Text.of("GOD")).isPresent()) {
             UUID uuid = args.<Player>getOne(Text.of("GOD")).get().getUniqueId();
             if (pluginInstance.getGodded().contains(uuid)) {

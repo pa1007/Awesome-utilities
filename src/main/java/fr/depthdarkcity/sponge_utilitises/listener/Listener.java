@@ -1,12 +1,10 @@
 package fr.depthdarkcity.sponge_utilitises.listener;
 
-public interface Event {
-
+public interface Listener {
     /**
      * get the name of the event
      *
      * @return String (name of the event)
      */
-    String getName();
-
+    String getEventName();
 }

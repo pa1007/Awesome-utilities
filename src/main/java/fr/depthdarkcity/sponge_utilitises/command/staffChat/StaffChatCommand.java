@@ -1,6 +1,6 @@
 package fr.depthdarkcity.sponge_utilitises.command.staffChat;
 
-import fr.depthdarkcity.sponge_utilitises.ChannelRegister;
+import fr.depthdarkcity.sponge_utilitises.ChannelRegistry;
 import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
@@ -39,7 +39,7 @@ public class StaffChatCommand extends AbstractCommand {
             CommandSource src, CommandContext args
     ) throws CommandException {
         String message = args.<String>getOne(Text.of("message")).orElseThrow(NullPointerException::new);
-        ChannelRegister.STAFF.send(Text.of(
+        ChannelRegistry.STAFF.send(Text.of(
                 TextColors.RED,
                 "[Staff-CHAT]",
                 TextColors.GOLD,

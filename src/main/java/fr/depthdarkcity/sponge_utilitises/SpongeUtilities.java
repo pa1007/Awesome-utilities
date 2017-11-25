@@ -7,7 +7,7 @@ import fr.depthdarkcity.sponge_utilitises.command.ban.BanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.TempBanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
-import fr.depthdarkcity.sponge_utilitises.command.god.UnGodCommandall;
+import fr.depthdarkcity.sponge_utilitises.command.god.UnGodEveryoneCommand;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
 import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilitises.command.staffChat.StaffChatCommand;
@@ -18,15 +18,14 @@ import fr.depthdarkcity.sponge_utilitises.command.vanish.VanishCommand;
 import fr.depthdarkcity.sponge_utilitises.command.vote.VoteCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warp.WarpCommand;
-import fr.depthdarkcity.sponge_utilitises.listener.ConnectionListener.ConnectionInvisibility;
-import fr.depthdarkcity.sponge_utilitises.listener.ConnectionListener.DisconnectionInvisibility;
-import fr.depthdarkcity.sponge_utilitises.listener.Event;
+import fr.depthdarkcity.sponge_utilitises.listener.Listener;
+import fr.depthdarkcity.sponge_utilitises.listener.connection_listener.ConnectionInvisibility;
+import fr.depthdarkcity.sponge_utilitises.listener.connection_listener.DisconnectionInvisibility;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -64,12 +63,13 @@ public class SpongeUtilities {
 
     private final Command[] commands;
 
-    private final Event[] events;
+    private final Listener[] events;
 
     private final Map<String, Warp> warps;
 
     private final Map<String, Integer> choices;
-    private final Set<UUID>            godded;
+
+    private final Set<UUID> godded;
 
     private Boolean closed;
 
@@ -78,10 +78,11 @@ public class SpongeUtilities {
     private final Set<UUID> voter;
 
     public SpongeUtilities() {
-        this.events = new Event[]{
+        this.events = new Listener[]{
                 new ConnectionInvisibility(this),
                 new DisconnectionInvisibility(this)
         };
+
         this.commands = new Command[]{
                 new InterdimentionalTeleportationCommand(this),
                 new BanCommand(this),
@@ -95,10 +96,11 @@ public class SpongeUtilities {
                 new HatCommand(this),
                 new VoteCommand(this),
                 new GodCommand(this),
-                new UnGodCommandall(this),
+                new UnGodEveryoneCommand(this),
                 new VanishCommand(this),
                 new StaffChatCommand(this)
         };
+
         this.godded = new HashSet<>();
         this.warps = new HashMap<>();
         this.warns = new HashMap<>();
@@ -132,7 +134,7 @@ public class SpongeUtilities {
         return this.configPath.toAbsolutePath().normalize().resolve("warn.json");
     }
 
-    @Listener
+    @org.spongepowered.api.event.Listener
     public void reload(GameReloadEvent event) {
         this.saveWarps();
         this.saveWarns();
@@ -141,7 +143,7 @@ public class SpongeUtilities {
         this.deleteVote();
     }
 
-    @Listener
+    @org.spongepowered.api.event.Listener
     public void preInit(GamePreInitializationEvent evt) {
         this.logger.debug("Registering commands...");
 
@@ -150,8 +152,8 @@ public class SpongeUtilities {
 
             Sponge.getCommandManager().register(this, command.createCommand(), command.getNames());
         }
-        for (Event event : this.events) {
-            this.logger.trace("Registering event {}", String.join("/", event.getName()));
+        for (Listener event : this.events) {
+            this.logger.trace("Registering event {}", String.join("/", event.getEventName()));
 
             Sponge.getEventManager().registerListeners(this, event);
         }
@@ -256,7 +258,7 @@ public class SpongeUtilities {
         }
     }
 
-    @Listener
+    @org.spongepowered.api.event.Listener
     public void onDammage(DamageEntityEvent e) {
         if (e.getTargetEntity() instanceof Player && getGodded().contains(e.getTargetEntity().getUniqueId())) {
             e.setCancelled(true);
