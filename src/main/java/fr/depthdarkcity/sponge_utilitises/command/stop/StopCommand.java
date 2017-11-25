@@ -29,7 +29,7 @@ public class StopCommand extends AbstractCommand {
 
     @Override
     public String[] getNames() {
-        return new String[]{"stop"};
+        return new String[]{"stopwithdelay"};
     }
 
     @Override

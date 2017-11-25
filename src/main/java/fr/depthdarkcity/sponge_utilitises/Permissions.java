@@ -119,5 +119,20 @@ public final class Permissions {
      */
     public static final String VANISH_COMMAND = "fr.depthdarkcity.sponge_utilitises.vanish_command";
 
+    /**
+     * Permission for joinning the game without a message.
+     */
+    public static final String JOIN_WITH_INVISIBILITY = "fr.depthdarkcity.sponge_utilitises.join_with_invisibility";
+
+    /**
+     * Permission for seen the invisibility join.
+     */
+    public static final String SHOW_INVISIBILITY_JOIN = "fr.depthdarkcity.sponge_utilitises.show_invisibility_join";
+
+    /**
+     * Permission for aving acces to the staff chat.
+     */
+    public static final String STAFF_CHAT = "fr.depthdarkcity.sponge_utilitises.staff_chat";
+
     private Permissions() {}
 }

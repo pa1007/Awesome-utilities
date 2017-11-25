@@ -10,6 +10,7 @@ import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.UnGodCommandall;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
 import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
+import fr.depthdarkcity.sponge_utilitises.command.staffChat.StaffChatCommand;
 import fr.depthdarkcity.sponge_utilitises.command.stop.StopCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.TeleportationToAll;
@@ -17,6 +18,9 @@ import fr.depthdarkcity.sponge_utilitises.command.vanish.VanishCommand;
 import fr.depthdarkcity.sponge_utilitises.command.vote.VoteCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warp.WarpCommand;
+import fr.depthdarkcity.sponge_utilitises.listener.ConnectionListener.ConnectionInvisibility;
+import fr.depthdarkcity.sponge_utilitises.listener.ConnectionListener.DisconnectionInvisibility;
+import fr.depthdarkcity.sponge_utilitises.listener.Event;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -60,6 +64,8 @@ public class SpongeUtilities {
 
     private final Command[] commands;
 
+    private final Event[] events;
+
     private final Map<String, Warp> warps;
 
     private final Map<String, Integer> choices;
@@ -72,6 +78,10 @@ public class SpongeUtilities {
     private final Set<UUID> voter;
 
     public SpongeUtilities() {
+        this.events = new Event[]{
+                new ConnectionInvisibility(this),
+                new DisconnectionInvisibility(this)
+        };
         this.commands = new Command[]{
                 new InterdimentionalTeleportationCommand(this),
                 new BanCommand(this),
@@ -86,9 +96,9 @@ public class SpongeUtilities {
                 new VoteCommand(this),
                 new GodCommand(this),
                 new UnGodCommandall(this),
-                new VanishCommand(this)
+                new VanishCommand(this),
+                new StaffChatCommand(this)
         };
-
         this.godded = new HashSet<>();
         this.warps = new HashMap<>();
         this.warns = new HashMap<>();
@@ -140,8 +150,14 @@ public class SpongeUtilities {
 
             Sponge.getCommandManager().register(this, command.createCommand(), command.getNames());
         }
+        for (Event event : this.events) {
+            this.logger.trace("Registering event {}", String.join("/", event.getName()));
+
+            Sponge.getEventManager().registerListeners(this, event);
+        }
 
         this.logger.debug("Registered {} commands.", this.commands.length);
+        this.logger.debug("Registered {} events.", this.events.length);
 
         this.loadWarps();
         this.loadWarns();
