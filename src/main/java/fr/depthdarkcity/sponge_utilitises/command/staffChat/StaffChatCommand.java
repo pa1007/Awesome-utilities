@@ -1,7 +1,7 @@
 package fr.depthdarkcity.sponge_utilitises.command.staffChat;
 
-import fr.depthdarkcity.sponge_utilitises.ChannelRegistry;
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.ChannelRegistry;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.command.CommandException;

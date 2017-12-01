@@ -1,6 +1,7 @@
 package fr.depthdarkcity.sponge_utilitises.command.hat;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.command.CommandException;
@@ -37,7 +38,7 @@ public class HatCommand extends AbstractCommand {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
         if (!(src instanceof Player)) {
-            throw new CommandException(Text.of("You must be a player to run that command."));
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
 
         Player pl = (Player) src;

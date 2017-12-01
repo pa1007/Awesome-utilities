@@ -1,4 +1,4 @@
-package fr.depthdarkcity.sponge_utilitises;
+package fr.depthdarkcity.sponge_utilitises.creator;
 
 public final class Permissions {
 
@@ -133,6 +133,11 @@ public final class Permissions {
      * Permission for aving acces to the staff chat.
      */
     public static final String STAFF_CHAT = "fr.depthdarkcity.sponge_utilitises.staff_chat";
+
+    /**
+     * Permission for flying.
+     */
+    public static final String FLY_COMMAND = "fr.depthdarkcity.sponge_utilitises.fly_command";
 
     private Permissions() {}
 }

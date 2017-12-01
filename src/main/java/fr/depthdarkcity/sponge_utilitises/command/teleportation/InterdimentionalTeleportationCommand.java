@@ -1,8 +1,9 @@
 package fr.depthdarkcity.sponge_utilitises.command.teleportation;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -41,45 +42,37 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
-        if (src instanceof Player) {
-            Player source = (Player) src;
-            if (!args.getOne(Text.of("player to you")).isPresent()) {
-
-                Player          destination         = args.<Player>getOne(Text.of("player")).get();
-                Location<World> destinationLocation = destination.getLocation().copy();
-                source.setLocation(destinationLocation);
-                src.sendMessage(Text.of(
-                        TextColors.RED,
-                        "[TP] : ",
-                        TextColors.RESET,
-                        "You have been teleported to the player"
-                ));
-                destination.sendMessage(Text.of(TextColors.RED,
-                                                "[TP] : ", TextColors.RESET, "The player ", source.getName(),
-                                                " has been teleported to you "
-                ));
-                return CommandResult.success();
-            }
-            else {
-                args.<Player>getOne(Text.of("player to you")).get().setLocation(source.getLocation());
-                args.<Player>getOne(Text.of("player to you")).get().sendMessage(Text.of(
-                        TextColors.RED,
-                        "[TP] : ",
-                        TextColors.RESET, "You have been teleported to ", source.getName()
-                ));
-                return CommandResult.success();
-            }
+        if (!(src instanceof Player)) {
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
-        else {
+
+        Player source = (Player) src;
+        if (!args.getOne(Text.of("player to you")).isPresent()) {
+
+            Player          destination         = args.<Player>getOne(Text.of("player")).get();
+            Location<World> destinationLocation = destination.getLocation().copy();
+            source.setLocation(destinationLocation);
             src.sendMessage(Text.of(
                     TextColors.RED,
                     "[TP] : ",
                     TextColors.RESET,
-                    "You must be a player to be teleported "
+                    "You have been teleported to the player"
             ));
-            return CommandResult.empty();
+            destination.sendMessage(Text.of(TextColors.RED,
+                                            "[TP] : ", TextColors.RESET, "The player ", source.getName(),
+                                            " has been teleported to you "
+            ));
+            return CommandResult.success();
         }
-
+        else {
+            args.<Player>getOne(Text.of("player to you")).get().setLocation(source.getLocation());
+            args.<Player>getOne(Text.of("player to you")).get().sendMessage(Text.of(
+                    TextColors.RED,
+                    "[TP] : ",
+                    TextColors.RESET, "You have been teleported to ", source.getName()
+            ));
+            return CommandResult.success();
+        }
     }
+
 }

@@ -6,6 +6,7 @@ import fr.depthdarkcity.sponge_utilitises.command.Command;
 import fr.depthdarkcity.sponge_utilitises.command.ban.BanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.TempBanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
+import fr.depthdarkcity.sponge_utilitises.command.fly.FlyCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.UnGodEveryoneCommand;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
@@ -19,8 +20,7 @@ import fr.depthdarkcity.sponge_utilitises.command.vote.VoteCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warp.WarpCommand;
 import fr.depthdarkcity.sponge_utilitises.listener.Listener;
-import fr.depthdarkcity.sponge_utilitises.listener.connection_listener.ConnectionInvisibility;
-import fr.depthdarkcity.sponge_utilitises.listener.connection_listener.DisconnectionInvisibility;
+import fr.depthdarkcity.sponge_utilitises.listener.connection_listener.ConnectionListener;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -79,8 +79,7 @@ public class SpongeUtilities {
 
     public SpongeUtilities() {
         this.events = new Listener[]{
-                new ConnectionInvisibility(this),
-                new DisconnectionInvisibility(this)
+                new ConnectionListener(this)
         };
 
         this.commands = new Command[]{
@@ -98,7 +97,8 @@ public class SpongeUtilities {
                 new GodCommand(this),
                 new UnGodEveryoneCommand(this),
                 new VanishCommand(this),
-                new StaffChatCommand(this)
+                new StaffChatCommand(this),
+                new FlyCommand(this)
         };
 
         this.godded = new HashSet<>();

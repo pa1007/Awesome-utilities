@@ -1,6 +1,7 @@
 package fr.depthdarkcity.sponge_utilitises.command.vote;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.command.Command;
@@ -72,7 +73,7 @@ public class VoteCommand extends AbstractCommand {
             return CommandResult.success();
         }
         else {
-            throw new CommandException(Text.of("You don't have the permission to execute this command"));
+            throw new CommandException(CommonException.SOURCE_PERMISSION_EXCEPTION);
         }
         return CommandResult.empty();
     }

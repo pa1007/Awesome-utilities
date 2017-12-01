@@ -1,6 +1,7 @@
 package fr.depthdarkcity.sponge_utilitises.command.god;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.command.CommandException;
@@ -36,7 +37,9 @@ public class GodCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
+        if (!(src instanceof Player)) {
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
+        }
         Player source = (Player) src;
 
         if (args.getOne(Text.of("GOD")).isPresent()) {

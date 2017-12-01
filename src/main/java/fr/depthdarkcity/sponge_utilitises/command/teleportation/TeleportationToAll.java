@@ -1,8 +1,9 @@
 package fr.depthdarkcity.sponge_utilitises.command.teleportation;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -39,6 +40,9 @@ public class TeleportationToAll extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (!(src instanceof Player)) {
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
+        }
         Collection<Player> onlinePlayer   = Sponge.getServer().getOnlinePlayers();
         Player             source         = (Player) src;
         Player[]           players        = onlinePlayer.stream().toArray(Player[]::new);

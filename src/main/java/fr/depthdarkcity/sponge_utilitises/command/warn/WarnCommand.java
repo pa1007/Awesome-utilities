@@ -1,9 +1,10 @@
 package fr.depthdarkcity.sponge_utilitises.command.warn;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.command.Command;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,12 +15,12 @@ import org.spongepowered.api.text.format.TextColors;
 
 public class WarnCommand extends AbstractCommand {
 
-    private final Command createWarn,listWarn;
+    private final Command createWarn, listWarn;
 
     public WarnCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
         this.createWarn = new CreateWarn(spongeUtilities);
-        this.listWarn= new ListWarn(spongeUtilities);
+        this.listWarn = new ListWarn(spongeUtilities);
     }
 
     @Override
@@ -39,15 +40,16 @@ public class WarnCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        if(src.hasPermission(Permissions.WARN_CREATE) || src.hasPermission(Permissions.WARN_LIST)){
+        if (src.hasPermission(Permissions.WARN_CREATE) || src.hasPermission(Permissions.WARN_LIST)) {
             src.sendMessage(Text.of(
                     TextColors.RED,
                     "[warp] : ",
                     TextColors.RESET,
                     "Usage: /warn [create,list]!"
             ));
-        }else {
-            throw new CommandException(Text.of("You don't have the permission to execute this command"));
+        }
+        else {
+            throw new CommandException(CommonException.SOURCE_PERMISSION_EXCEPTION);
         }
         return CommandResult.empty();
     }

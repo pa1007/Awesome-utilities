@@ -1,8 +1,9 @@
 package fr.depthdarkcity.sponge_utilitises.command.speed;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -39,6 +40,9 @@ public class SpeedCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (!(src instanceof Player)) {
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
+        }
         Player source = (Player) src;
         long   m      = args.<Long>getOne(Text.of("Speed")).get();
 

@@ -1,6 +1,7 @@
 package fr.depthdarkcity.sponge_utilitises.command.vanish;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import org.spongepowered.api.command.CommandException;
@@ -41,7 +42,7 @@ public class VanishCommand extends AbstractCommand {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
         if (!(src instanceof Player)) {
-            throw new CommandException(Text.of("You can't use the"));
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
 
         Player  player = (Player) src;

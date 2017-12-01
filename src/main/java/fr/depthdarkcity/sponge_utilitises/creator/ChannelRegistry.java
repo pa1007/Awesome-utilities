@@ -1,4 +1,4 @@
-package fr.depthdarkcity.sponge_utilitises;
+package fr.depthdarkcity.sponge_utilitises.creator;
 
 import org.spongepowered.api.text.channel.MessageChannel;
 

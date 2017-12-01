@@ -1,6 +1,6 @@
 package fr.depthdarkcity.sponge_utilitises.command.warp;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.Warp;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;

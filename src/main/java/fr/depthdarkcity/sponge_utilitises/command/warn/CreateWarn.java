@@ -1,10 +1,11 @@
 package fr.depthdarkcity.sponge_utilitises.command.warn;
 
-import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.Warn;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.Reason;
+import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
+import fr.depthdarkcity.sponge_utilitises.creator.Permissions;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -50,6 +51,9 @@ public class CreateWarn extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (!(src instanceof Player)) {
+            throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
+        }
         Player warned = args.<Player>getOne(Text.of("player")).get();
 
         if (Objects.equals(args.<String>getOne(Text.of("Reason")).get(), Reason.OTHER)) {
