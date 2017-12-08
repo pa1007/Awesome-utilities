@@ -72,6 +72,7 @@ public class InterdimentionalTeleportationCommand extends AbstractCommand {
                     "[TP] : ",
                     TextColors.RESET, "You have been teleported to ", source.getName()
             ));
+
             return CommandResult.success();
         }
     }
