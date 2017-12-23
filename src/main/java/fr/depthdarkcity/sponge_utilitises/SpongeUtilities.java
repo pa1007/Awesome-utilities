@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "sponge_utilities",
         name = "SpongeUtilities",
-        version = "2.5",
+        version = "2.5.1",
         url = "http://depthdarkcity.fr/",
         description = "This plugin is made for Tazmarkill , created for depthdarkcity.fr",
         authors = {"pa1007"})

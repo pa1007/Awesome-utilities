@@ -6,7 +6,7 @@
 
     <groupId>fr.depthdarlcity.spongeUtilities</groupId>
     <artifactId>spongeutilities</artifactId>
-    <version>2.5</version>
+    <version>2.5.1</version>
 
     <properties>
         <kotlin.version>1.1.50</kotlin.version>
