@@ -77,6 +77,8 @@ public class SpongeUtilities {
 
     private final Set<UUID> godded;
 
+    private final Set<UUID> debugList;
+
     private Boolean closed;
 
     private Boolean deletable;
@@ -119,6 +121,7 @@ public class SpongeUtilities {
         this.closed = Boolean.FALSE;
         this.voter = new HashSet<>();
         this.creativeItem = new HashMap<>();
+        this.debugList = new HashSet<>();
         pluginInstance = this;
     }
 
@@ -162,8 +165,8 @@ public class SpongeUtilities {
         this.loadWarps();
         this.loadWarns();
         this.deleteVote();
-        //  this.saveCreativeItem();
-        //  this.loadCreativeItem();
+       // this.saveCreativeItem();
+       // this.loadCreativeItem();
     }
 
     @org.spongepowered.api.event.Listener
@@ -171,7 +174,7 @@ public class SpongeUtilities {
         this.loadWarps();
         this.loadWarns();
         this.deleteVote();
-        //this.loadCreativeItem();
+      //  this.loadCreativeItem();
         this.logger.debug("Registering commands...");
 
         for (Command command : this.commands) {
@@ -283,7 +286,7 @@ public class SpongeUtilities {
         }
     }
 
-  /*  public void saveCreativeItem() {
+    /*public void saveCreativeItem() {
         Path itemFile = this.getCreativeItemFile();
 
         try {
@@ -372,6 +375,14 @@ public class SpongeUtilities {
 
     public Set<UUID> getVoter() {
         return voter;
+    }
+
+    public Set<UUID> getDebugList() {
+        return debugList;
+    }
+
+    public void debugInChatMessage(Player player, Text text) {
+        player.sendMessage(Text.of(TextColors.RED, "[Debug]", TextColors.RESET, text));
     }
 
     public static SpongeUtilities getPluginInstance() {

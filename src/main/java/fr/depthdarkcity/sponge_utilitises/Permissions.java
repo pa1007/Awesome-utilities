@@ -174,5 +174,10 @@ public final class Permissions {
      */
     public static final String GET_STATE = "fr.depthdarkcity.sponge_utilitises.get_state";
 
+    /**
+     * Permission for get the ADMIN Debug.
+     */
+    public static final String DEBUG = "fr.depthdarkcity.tower_game.debug";
+
     private Permissions() {}
 }
