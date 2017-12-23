@@ -140,14 +140,39 @@ public final class Permissions {
     public static final String FLY_COMMAND = "fr.depthdarkcity.sponge_utilitises.fly_command";
 
     /**
-     * Permission for the ping of the server.
-     */
-    public static final String TPS_COMMAND = "fr.depthdarkcity.sponge_utilitises.tps_command";
-
-    /**
      * Permission for get your ping.
      */
     public static final String PING_COMMAND = "fr.depthdarkcity.sponge_utilitises.ping_command";
+
+    /**
+     * Permission for fixing the light bug.
+     */
+    public static final String FIX_COMMAND = "fr.depthdarkcity.sponge_utilitises.fix_command";
+
+    /**
+     * Permission for get the inventory with special Item.
+     */
+    public static final String CREATIVE_INVENTORY_PLUS = "fr.depthdarkcity.sponge_utilitises.creative_inventory_plus";
+
+    /**
+     * Permission for admin perm.
+     */
+    public static final String ADMIN = "fr.depthdarkcity.sponge_utilitises.admin";
+
+    /**
+     * Permission for saving the Block for fast acces.
+     */
+    public static final String SAVE_STATE = "fr.depthdarkcity.sponge_utilitises.save_state";
+
+    /**
+     * Permission for delete a item.
+     */
+    public static final String DEL_STATE = "fr.depthdarkcity.sponge_utilitises.del_state";
+
+    /**
+     * Permission for getting the state of a block.
+     */
+    public static final String GET_STATE = "fr.depthdarkcity.sponge_utilitises.get_state";
 
     private Permissions() {}
 }

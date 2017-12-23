@@ -41,7 +41,6 @@ public class ChooseCommand extends AbstractCommand {
         if (!(src instanceof Player)) {
             throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
-
         Player source = (Player) src;
         String vote   = args.<String>getOne(Text.of("Your Vote")).get();
 

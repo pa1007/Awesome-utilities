@@ -13,8 +13,9 @@ public final class CommonException {
     /**
      * Exception that Throws a command Permission exeption.
      */
-    public static final Text SOURCE_PERMISSION_EXCEPTION = Text.of("You don't have the permission to do this command.");
+    public static final Text SOURCE_PERMISSION_EXCEPTION = Text.of("You don't have the permission to execute this command");
 
     public CommonException() {
     }
+
 }

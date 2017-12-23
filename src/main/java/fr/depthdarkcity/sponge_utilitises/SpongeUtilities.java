@@ -10,16 +10,17 @@ import fr.depthdarkcity.sponge_utilitises.command.fly.FlyCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.UnGodEveryoneCommand;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
+import fr.depthdarkcity.sponge_utilitises.command.ping.PingCommand;
 import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilitises.command.staffChat.StaffChatCommand;
 import fr.depthdarkcity.sponge_utilitises.command.stop.StopCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.TeleportationToAll;
-import fr.depthdarkcity.sponge_utilitises.command.ping.PingCommand;
 import fr.depthdarkcity.sponge_utilitises.command.vanish.VanishCommand;
 import fr.depthdarkcity.sponge_utilitises.command.vote.VoteCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warn.WarnCommand;
 import fr.depthdarkcity.sponge_utilitises.command.warp.WarpCommand;
+import fr.depthdarkcity.sponge_utilitises.creator.CreativeItem;
 import fr.depthdarkcity.sponge_utilitises.creator.Warn;
 import fr.depthdarkcity.sponge_utilitises.creator.Warp;
 import fr.depthdarkcity.sponge_utilitises.listener.Listener;
@@ -55,15 +56,17 @@ public class SpongeUtilities {
 
     private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
+    private static SpongeUtilities pluginInstance;
+
     public final Map<UUID, List<Warn>> warns;
+
+    private final Map<String, CreativeItem> creativeItem;
 
     @Inject
     @ConfigDir(sharedRoot = false)
-    private Path configPath;
-
+    private       Path      configPath;
     @Inject
-    private Logger logger;
-
+    private       Logger    logger;
     private final Command[] commands;
 
     private final Listener[] events;
@@ -79,7 +82,6 @@ public class SpongeUtilities {
     private Boolean deletable;
 
     private final Set<UUID> voter;
-
 
 
     public SpongeUtilities() {
@@ -104,7 +106,9 @@ public class SpongeUtilities {
                 new VanishCommand(this),
                 new StaffChatCommand(this),
                 new FlyCommand(this),
-                new PingCommand(this)
+                new PingCommand(this)/*,
+                new CreativePlusInventoryCommand(this)/*,
+                new StateBlockCommand(this)*/
         };
 
         this.godded = new HashSet<>();
@@ -114,6 +118,8 @@ public class SpongeUtilities {
         this.deletable = Boolean.FALSE;
         this.closed = Boolean.FALSE;
         this.voter = new HashSet<>();
+        this.creativeItem = new HashMap<>();
+        pluginInstance = this;
     }
 
     public Set<UUID> getGodded() {
@@ -132,6 +138,10 @@ public class SpongeUtilities {
         return this.warns;
     }
 
+    public Map<String, CreativeItem> getCreativeItem() {
+        return creativeItem;
+    }
+
     public Path getWarpsFile() {
         return this.configPath.toAbsolutePath().normalize().resolve("warps.json");
     }
@@ -140,6 +150,11 @@ public class SpongeUtilities {
         return this.configPath.toAbsolutePath().normalize().resolve("warn.json");
     }
 
+    public Path getCreativeItemFile() {
+        return this.configPath.toAbsolutePath().normalize().resolve("item.json");
+    }
+
+
     @org.spongepowered.api.event.Listener
     public void reload(GameReloadEvent event) {
         this.saveWarps();
@@ -147,10 +162,16 @@ public class SpongeUtilities {
         this.loadWarps();
         this.loadWarns();
         this.deleteVote();
+        //  this.saveCreativeItem();
+        //  this.loadCreativeItem();
     }
 
     @org.spongepowered.api.event.Listener
     public void preInit(GamePreInitializationEvent evt) {
+        this.loadWarps();
+        this.loadWarns();
+        this.deleteVote();
+        //this.loadCreativeItem();
         this.logger.debug("Registering commands...");
 
         for (Command command : this.commands) {
@@ -167,9 +188,7 @@ public class SpongeUtilities {
         this.logger.debug("Registered {} commands.", this.commands.length);
         this.logger.debug("Registered {} events.", this.events.length);
 
-        this.loadWarps();
-        this.loadWarns();
-        this.deleteVote();
+
     }
 
     public void saveWarps() {
@@ -264,6 +283,54 @@ public class SpongeUtilities {
         }
     }
 
+  /*  public void saveCreativeItem() {
+        Path itemFile = this.getCreativeItemFile();
+
+        try {
+            this.logger.info("Creating a new item...");
+
+            Path parentDir = itemFile.getParent();
+
+            if (!Files.isDirectory(parentDir)) {
+                Files.createDirectories(parentDir);
+            }
+
+            try (Writer writer = Files.newBufferedWriter(itemFile)) {
+                GSON.toJson(this.creativeItem.values(), writer);
+            }
+
+            this.logger.info("Successfully creating a new Item!");
+        }
+        catch (IOException e) {
+            this.logger.error("Unable to create Item:", e);
+        }
+    }
+
+    public void loadCreativeItem() {
+        Path creativeItem = this.getCreativeItemFile();
+
+        this.logger.info("Loading Items...");
+
+        if (Files.notExists(creativeItem)) {
+            this.logger.info("No items loaded since the file containing the items does not exists!");
+            return;
+        }
+
+        try (Reader reader = Files.newBufferedReader(creativeItem)) {
+            CreativeItem[] items = GSON.fromJson(reader, CreativeItem[].class);
+
+            this.creativeItem.putAll(Arrays.stream(items).collect(Collectors.toMap(
+                    CreativeItem::getName,
+                    Function.identity()
+            )));
+
+            this.logger.info("{} items loaded successfully!", items.length);
+        }
+        catch (IOException e) {
+            this.logger.error("Unable to load items:", e);
+        }
+    }*/
+
     @org.spongepowered.api.event.Listener
     public void onDammage(DamageEntityEvent e) {
         if (e.getTargetEntity() instanceof Player && getGodded().contains(e.getTargetEntity().getUniqueId())) {
@@ -305,5 +372,9 @@ public class SpongeUtilities {
 
     public Set<UUID> getVoter() {
         return voter;
+    }
+
+    public static SpongeUtilities getPluginInstance() {
+        return pluginInstance;
     }
 }

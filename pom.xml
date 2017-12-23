@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.depthdarlcity.spongeUtilities</groupId>
-    <artifactId>utilitises</artifactId>
-    <version>1.1</version>
+    <artifactId>spongeutilities</artifactId>
+    <version>2.5</version>
 
     <properties>
         <kotlin.version>1.1.50</kotlin.version>
