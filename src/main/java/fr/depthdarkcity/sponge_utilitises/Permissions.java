@@ -177,7 +177,12 @@ public final class Permissions {
     /**
      * Permission for get the ADMIN Debug.
      */
-    public static final String DEBUG = "fr.depthdarkcity.tower_game.debug";
+    public static final String DEBUG = "fr.depthdarkcity.sponge_utilitises.debug";
+
+    /**
+     * Permission for changing the motd.
+     */
+    public static final String MOTD_CHANGE = "fr.depthdarkcity.sponge_utilitises.motd_change";
 
     private Permissions() {}
 }

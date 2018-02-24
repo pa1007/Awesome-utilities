@@ -38,12 +38,12 @@ public class AddCommand extends AbstractCommand {
             throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
         Player player = (Player) src;
-        if (!pluginInstance.getDebugList().contains(player.getUniqueId())) {
-            pluginInstance.getDebugList().add(player.getUniqueId());
-            pluginInstance.debugInChatMessage(player, Text.of("You have been put in the Debug Chat"));
+        if (!SpongeUtilities.getDebugList().contains(player.getUniqueId())) {
+            SpongeUtilities.getDebugList().add(player.getUniqueId());
+            SpongeUtilities.debugInChatMessage(player, Text.of("You have been put in the Debug Chat"));
         }
         else {
-            pluginInstance.debugInChatMessage(player, Text.of("You are already in the Debug Chat"));
+            SpongeUtilities.debugInChatMessage(player, Text.of("You are already in the Debug Chat"));
         }
         return CommandResult.success();
     }

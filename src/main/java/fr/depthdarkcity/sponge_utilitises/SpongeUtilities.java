@@ -6,10 +6,14 @@ import fr.depthdarkcity.sponge_utilitises.command.Command;
 import fr.depthdarkcity.sponge_utilitises.command.ban.BanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.TempBanCommand;
 import fr.depthdarkcity.sponge_utilitises.command.broadcoast.BroadcastCommand;
+import fr.depthdarkcity.sponge_utilitises.command.creativePlusInventory.CreativePlusInventoryCommand;
+import fr.depthdarkcity.sponge_utilitises.command.creativePlusInventory.itemcreationcommands.StateBlockCommand;
+import fr.depthdarkcity.sponge_utilitises.command.debug.DebugCommand;
 import fr.depthdarkcity.sponge_utilitises.command.fly.FlyCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.UnGodEveryoneCommand;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
+import fr.depthdarkcity.sponge_utilitises.command.motdCommand.MOTDCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ping.PingCommand;
 import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilitises.command.staffChat.StaffChatCommand;
@@ -54,32 +58,22 @@ import java.util.stream.Collectors;
         authors = {"pa1007"})
 public class SpongeUtilities {
 
-    private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-
-    private static SpongeUtilities pluginInstance;
-
-    public final Map<UUID, List<Warn>> warns;
-
-    private final Map<String, CreativeItem> creativeItem;
-
+    private static final Gson      GSON      = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+    private static final Set<UUID> godded    = new HashSet<>();
+    private static final Set<UUID> debugList = new HashSet<>();
+    private static SpongeUtilities           pluginInstance;
+    public final   Map<UUID, List<Warn>>     warns;
+    private final  Map<String, CreativeItem> creativeItem;
     @Inject
     @ConfigDir(sharedRoot = false)
-    private       Path      configPath;
+    private        Path                      configPath;
     @Inject
-    private       Logger    logger;
-    private final Command[] commands;
-
-    private final Listener[] events;
-
-    private final Map<String, Warp> warps;
-
-    private final Map<String, Integer> choices;
-
-    private final Set<UUID> godded;
-
-    private final Set<UUID> debugList;
-
-    private Boolean closed;
+    private        Logger                    logger;
+    private final  Command[]                 commands;
+    private final  Listener[]                events;
+    private final  Map<String, Warp>         warps;
+    private final  Map<String, Integer>      choices;
+    private        Boolean                   closed;
 
     private Boolean deletable;
 
@@ -108,12 +102,13 @@ public class SpongeUtilities {
                 new VanishCommand(this),
                 new StaffChatCommand(this),
                 new FlyCommand(this),
-                new PingCommand(this)/*,
-                new CreativePlusInventoryCommand(this)/*,
-                new StateBlockCommand(this)*/
+                new PingCommand(this),
+                new CreativePlusInventoryCommand(this),
+                new StateBlockCommand(this),
+                new DebugCommand(this)/*,
+                new MOTDCommand(this)*/
         };
 
-        this.godded = new HashSet<>();
         this.warps = new HashMap<>();
         this.warns = new HashMap<>();
         this.choices = new HashMap<>();
@@ -121,7 +116,6 @@ public class SpongeUtilities {
         this.closed = Boolean.FALSE;
         this.voter = new HashSet<>();
         this.creativeItem = new HashMap<>();
-        this.debugList = new HashSet<>();
         pluginInstance = this;
     }
 
@@ -174,7 +168,7 @@ public class SpongeUtilities {
         this.loadWarps();
         this.loadWarns();
         this.deleteVote();
-      //  this.loadCreativeItem();
+        //  this.loadCreativeItem();
         this.logger.debug("Registering commands...");
 
         for (Command command : this.commands) {
@@ -286,7 +280,7 @@ public class SpongeUtilities {
         }
     }
 
-    /*public void saveCreativeItem() {
+  /*  public void saveCreativeItem() {
         Path itemFile = this.getCreativeItemFile();
 
         try {
@@ -349,13 +343,6 @@ public class SpongeUtilities {
         choices.clear();
     }
 
-    public void broadcast(Text text) {
-        Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
-                TextColors.RED, "[Broadcast] : ", TextColors.RESET,
-                text
-        ));
-    }
-
     public boolean setDeletable(boolean deletables) {
         this.deletable = deletables;
         return deletable;
@@ -377,15 +364,22 @@ public class SpongeUtilities {
         return voter;
     }
 
-    public Set<UUID> getDebugList() {
+    public static Set<UUID> getDebugList() {
         return debugList;
-    }
-
-    public void debugInChatMessage(Player player, Text text) {
-        player.sendMessage(Text.of(TextColors.RED, "[Debug]", TextColors.RESET, text));
     }
 
     public static SpongeUtilities getPluginInstance() {
         return pluginInstance;
+    }
+
+    public static void broadcast(Text text) {
+        Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
+                TextColors.RED, "[Broadcast] : ", TextColors.RESET,
+                text
+        ));
+    }
+
+    public static void debugInChatMessage(Player player, Text text) {
+        player.sendMessage(Text.of(TextColors.RED, "[Debug]", TextColors.RESET, text));
     }
 }
