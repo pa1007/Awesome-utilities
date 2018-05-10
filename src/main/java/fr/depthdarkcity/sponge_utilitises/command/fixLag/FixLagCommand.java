@@ -1,5 +1,6 @@
-package fr.depthdarkcity.sponge_utilitises.command.debug;
+package fr.depthdarkcity.sponge_utilitises.command.fixLag;
 
+import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
@@ -10,22 +11,25 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Chunk;
 
-public class LeaveCommand extends AbstractCommand {
+public class FixLagCommand extends AbstractCommand {
 
-    public LeaveCommand(SpongeUtilities spongeUtilities) {
+    public FixLagCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
     }
 
     @Override
     public String[] getNames() {
-        return new String[]{"leave"};
+        return new String[]{"fixlight"};
     }
 
     @Override
     public CommandSpec createCommand() {
         return CommandSpec.builder()
-                .description(Text.of("Leave the debug team"))
+                .arguments()
+                .permission(Permissions.FIX_COMMAND)
+                .description(Text.of("Fix the light around the player"))
                 .executor(this)
                 .build();
     }
@@ -38,13 +42,9 @@ public class LeaveCommand extends AbstractCommand {
             throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
         Player player = (Player) src;
-        if (!SpongeUtilities.getDebugList().contains(player.getUniqueId())) {
-            SpongeUtilities.getDebugList().remove(player.getUniqueId());
-            SpongeUtilities.debugInChatMessage(player, Text.of("You have been removed from the debug chat"));
-        }
-        else {
-            SpongeUtilities.debugInChatMessage(player, Text.of("You are not in the Debug Chat"));
-        }
+        player.getWorld().getLoadedChunks().forEach(Chunk::unloadChunk);
+        player.sendMessage(Text.of("[Chunk] : The light as been fixed"));
+
         return CommandResult.success();
     }
 }

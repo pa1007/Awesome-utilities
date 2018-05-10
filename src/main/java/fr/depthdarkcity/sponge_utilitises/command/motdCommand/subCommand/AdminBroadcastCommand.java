@@ -1,4 +1,4 @@
-package fr.depthdarkcity.sponge_utilitises.command.broadcoast;
+package fr.depthdarkcity.sponge_utilitises.command.motdCommand.subCommand;
 
 import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
@@ -7,39 +7,33 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
-public class BroadcastCommand extends AbstractCommand {
+public class AdminBroadcastCommand extends AbstractCommand {
 
-    public BroadcastCommand(SpongeUtilities spongeUtilities) {
+
+    public AdminBroadcastCommand(SpongeUtilities spongeUtilities) {
         super(spongeUtilities);
     }
 
     @Override
     public String[] getNames() {
-        return new String[]{"Broadcast"};
+        return new String[]{"AdminBroadcast"};
     }
 
     @Override
     public CommandSpec createCommand() {
         return CommandSpec.builder()
-                .arguments(
-                        GenericArguments.onlyOne(GenericArguments.remainingJoinedStrings(Text.of("message")))
-                )
-                .permission(Permissions.BROADCAST_COMMAND)
-                .description(Text.of("To broadcast a message to the server"))
+                .arguments()
+                .permission(Permissions.MOTD_CHANGE)
+                .description(Text.of("To broadCast the MOTD to the other Admin"))
                 .executor(this)
                 .build();
     }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
-        String message = args.<String>getOne(Text.of("message")).orElseThrow(NullPointerException::new);
-        SpongeUtilities.broadcast(Text.of(message));
-
-        return CommandResult.success();
+        throw new CommandException(Text.of("This is not supported in your sponge Version"));
     }
 }

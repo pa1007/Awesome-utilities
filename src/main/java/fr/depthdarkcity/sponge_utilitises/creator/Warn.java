@@ -144,7 +144,7 @@ public class Warn {
 
     @Override
     public String toString() {
-        return com.google.common.base.Objects.toStringHelper(this)
+        return com.google.common.base.MoreObjects.toStringHelper(this)
                 .add("warnPlayerUUID", playerUUID)
                 .add("adminUUID", adminUUID)
                 .add("Reasons", reasons)

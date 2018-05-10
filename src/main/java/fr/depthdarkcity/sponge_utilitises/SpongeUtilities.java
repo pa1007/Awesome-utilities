@@ -13,11 +13,11 @@ import fr.depthdarkcity.sponge_utilitises.command.fly.FlyCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.GodCommand;
 import fr.depthdarkcity.sponge_utilitises.command.god.UnGodEveryoneCommand;
 import fr.depthdarkcity.sponge_utilitises.command.hat.HatCommand;
-import fr.depthdarkcity.sponge_utilitises.command.motdCommand.MOTDCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ping.PingCommand;
 import fr.depthdarkcity.sponge_utilitises.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilitises.command.staffChat.StaffChatCommand;
 import fr.depthdarkcity.sponge_utilitises.command.stop.StopCommand;
+import fr.depthdarkcity.sponge_utilitises.command.sword.SwordGiveCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.InterdimentionalTeleportationCommand;
 import fr.depthdarkcity.sponge_utilitises.command.teleportation.TeleportationToAll;
 import fr.depthdarkcity.sponge_utilitises.command.vanish.VanishCommand;
@@ -106,7 +106,8 @@ public class SpongeUtilities {
                 new CreativePlusInventoryCommand(this),
                 new StateBlockCommand(this),
                 new DebugCommand(this)/*,
-                new MOTDCommand(this)*/
+                new MOTDCommand(this)*/,
+                new SwordGiveCommand(this)
         };
 
         this.warps = new HashMap<>();
@@ -154,13 +155,14 @@ public class SpongeUtilities {
 
     @org.spongepowered.api.event.Listener
     public void reload(GameReloadEvent event) {
+        event.getCause().first(Player.class).get().sendMessage(Text.of("Relaoding Server"));
         this.saveWarps();
         this.saveWarns();
         this.loadWarps();
         this.loadWarns();
         this.deleteVote();
-       // this.saveCreativeItem();
-       // this.loadCreativeItem();
+        // this.saveCreativeItem();
+        // this.loadCreativeItem();
     }
 
     @org.spongepowered.api.event.Listener
@@ -280,7 +282,7 @@ public class SpongeUtilities {
         }
     }
 
-  /*  public void saveCreativeItem() {
+    public void saveCreativeItem() {
         Path itemFile = this.getCreativeItemFile();
 
         try {
@@ -326,7 +328,7 @@ public class SpongeUtilities {
         catch (IOException e) {
             this.logger.error("Unable to load items:", e);
         }
-    }*/
+    }
 
     @org.spongepowered.api.event.Listener
     public void onDammage(DamageEntityEvent e) {
@@ -372,11 +374,12 @@ public class SpongeUtilities {
         return pluginInstance;
     }
 
-    public static void broadcast(Text text) {
+    public static Text broadcast(Text text) {
         Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(
                 TextColors.RED, "[Broadcast] : ", TextColors.RESET,
                 text
         ));
+        return text;
     }
 
     public static void debugInChatMessage(Player player, Text text) {

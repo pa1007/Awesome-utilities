@@ -184,5 +184,10 @@ public final class Permissions {
      */
     public static final String MOTD_CHANGE = "fr.depthdarkcity.sponge_utilitises.motd_change";
 
+    /**
+     * Permission for giving sword Command.
+     */
+    public static final String SWORD_COMMAND = "fr.depthdarkcity.sponge_utilitises.sword_command";
+
     private Permissions() {}
 }

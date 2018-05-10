@@ -1,9 +1,9 @@
 package fr.depthdarkcity.sponge_utilitises.command.teleportation;
 
+import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
-import fr.depthdarkcity.sponge_utilitises.Permissions;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -60,7 +60,7 @@ public class TeleportationToAll extends AbstractCommand {
                 i++;
             }
             while (players.length > i);
-            pluginInstance.broadcast(Text.of(src.getName(), " has teleported everyone to : ", player.getName()));
+            SpongeUtilities.broadcast(Text.of(src.getName(), " has teleported everyone to : ", player.getName()));
 
             return CommandResult.success();
         }
@@ -71,7 +71,7 @@ public class TeleportationToAll extends AbstractCommand {
                 i++;
             }
             while (players.length > i);
-            pluginInstance.broadcast(Text.of(
+            SpongeUtilities.broadcast(Text.of(
                     "everyone have been teleported to ",
                     src.getName()
             ));

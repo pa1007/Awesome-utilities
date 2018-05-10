@@ -1,11 +1,11 @@
 package fr.depthdarkcity.sponge_utilitises.command.warn;
 
+import fr.depthdarkcity.sponge_utilitises.Permissions;
 import fr.depthdarkcity.sponge_utilitises.SpongeUtilities;
-import fr.depthdarkcity.sponge_utilitises.creator.Warn;
 import fr.depthdarkcity.sponge_utilitises.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilitises.command.ban.Reason;
 import fr.depthdarkcity.sponge_utilitises.creator.CommonException;
-import fr.depthdarkcity.sponge_utilitises.Permissions;
+import fr.depthdarkcity.sponge_utilitises.creator.Warn;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -72,10 +72,10 @@ public class CreateWarn extends AbstractCommand {
                         "For ",
                         reason
                 )).build());
-                pluginInstance.broadcast(Text.of("The player ",
-                                                 warned.getName(),
-                                                 " Has been warn for ",
-                                                 args.<String>getOne(Text.of("Reason")).get(), " ", reason
+                SpongeUtilities.broadcast(Text.of("The player ",
+                                                  warned.getName(),
+                                                  " Has been warn for ",
+                                                  args.<String>getOne(Text.of("Reason")).get(), " ", reason
                 ));
 
                 Player admin = (Player) src;
@@ -105,7 +105,7 @@ public class CreateWarn extends AbstractCommand {
                     "For ",
                     args.<String>getOne(Text.of("Reason")).get()
             )).build());
-            pluginInstance.broadcast(Text.of(
+            SpongeUtilities.broadcast(Text.of(
                     "The player ",
                     warned.getName(),
                     " Has been warn for ",
