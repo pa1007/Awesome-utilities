@@ -23,7 +23,7 @@ public class DebugCommand extends AbstractCommand {
 
     @Override
     public String[] getNames() {
-        return new String[]{"DebugChat"};
+        return new String[]{"debugchat"};
     }
 
     @Override

@@ -70,6 +70,7 @@ public class SpongeUtilities {
     private static       SpongeUtilities              pluginInstance;
     private static       Optional<UserStorageService> userStorage;
     public final         Map<UUID, List<Warn>>        warns;
+    private              String                       voteMessage;
     private final        Set<UUID>                    debugList = new HashSet<>();
     private final        Set<UUID>                    frozedPlayer;
     @Inject
@@ -340,6 +341,7 @@ public class SpongeUtilities {
         setClosed(false);
         voter.clear();
         choices.clear();
+        setVoteMessage(null);
     }
 
     /**
@@ -437,6 +439,32 @@ public class SpongeUtilities {
             throw new InvalidUserNameException();
         }
         return warns.get(user.get().getUniqueId());
+    }
+
+    /**
+     * @return {@link String} the all message of the vote , send null if no vote send
+     */
+    public String getVoteMessage() {
+        return voteMessage;
+    }
+
+    /**
+     * Set a new vote with auto open
+     *
+     * @param voteMessage {@link String} the vote , with choices
+     */
+    public void setVoteMessage(String voteMessage) {
+        this.voteMessage = voteMessage;
+        this.closed = false;
+    }
+
+    /**
+     * Get the spongeUtilities logger
+     *
+     * @return the spongeUtilities logger
+     */
+    public Logger getLogger() {
+        return logger;
     }
 
     /**

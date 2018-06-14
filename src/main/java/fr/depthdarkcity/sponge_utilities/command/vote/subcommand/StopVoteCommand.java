@@ -1,4 +1,4 @@
-package fr.depthdarkcity.sponge_utilities.command.vote;
+package fr.depthdarkcity.sponge_utilities.command.vote.subcommand;
 
 import fr.depthdarkcity.sponge_utilities.Permissions;
 import fr.depthdarkcity.sponge_utilities.SpongeUtilities;

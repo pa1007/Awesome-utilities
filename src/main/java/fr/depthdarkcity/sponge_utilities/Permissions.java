@@ -184,5 +184,10 @@ public final class Permissions {
      */
     public static final String FREEZE_COMMAND = "fr.depthdarkcity.sponge_utilities.freeze_command";
 
+    /**
+     * Permission for To repeat the vote.
+     */
+    public static final String REPEAT_VOTE_COMMAND = "fr.depthdarkcity.sponge_utilities.repeat_vote_command";
+
     private Permissions() {}
 }

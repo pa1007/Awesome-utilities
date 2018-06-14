@@ -26,7 +26,7 @@ public class BanCommand extends AbstractCommand {
 
     @Override
     public String[] getNames() {
-        return new String[]{"Ban"};
+        return new String[]{"ban"};
     }
 
     @Override

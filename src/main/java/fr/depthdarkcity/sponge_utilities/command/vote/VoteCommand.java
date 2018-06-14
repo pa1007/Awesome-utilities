@@ -1,10 +1,11 @@
 package fr.depthdarkcity.sponge_utilities.command.vote;
 
-import fr.depthdarkcity.sponge_utilities.creator.CommonException;
 import fr.depthdarkcity.sponge_utilities.Permissions;
 import fr.depthdarkcity.sponge_utilities.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilities.command.AbstractCommand;
 import fr.depthdarkcity.sponge_utilities.command.Command;
+import fr.depthdarkcity.sponge_utilities.command.vote.subcommand.*;
+import fr.depthdarkcity.sponge_utilities.creator.CommonException;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,7 +17,7 @@ import org.spongepowered.api.text.format.TextColors;
 public class VoteCommand extends AbstractCommand {
 
     private final Command chooseCommand, createCommand, resultCommand, broadCastResultCommand, stopVote,
-            delVote;
+            delVote, repeatVote;
 
 
     public VoteCommand(SpongeUtilities spongeUtilities) {
@@ -27,6 +28,7 @@ public class VoteCommand extends AbstractCommand {
         this.broadCastResultCommand = new BroadCastResultCommand(spongeUtilities);
         this.stopVote = new StopVoteCommand(spongeUtilities);
         this.delVote = new DeleteCommand(spongeUtilities);
+        this.repeatVote = new RepeatCommand(spongeUtilities);
     }
 
     @Override
@@ -44,6 +46,7 @@ public class VoteCommand extends AbstractCommand {
                 .child(this.chooseCommand.createCommand(), this.chooseCommand.getNames())
                 .child(this.broadCastResultCommand.createCommand(), this.broadCastResultCommand.getNames())
                 .child(this.delVote.createCommand(), this.delVote.getNames())
+                .child(this.repeatVote.createCommand(), this.repeatVote.getNames())
                 .child(this.stopVote.createCommand(), this.stopVote.getNames())
                 .build();
     }
@@ -51,10 +54,10 @@ public class VoteCommand extends AbstractCommand {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (src.hasPermission(Permissions.RESULT_COMMAND)
-                 || src.hasPermission(Permissions.CREATE_VOTE_COMMAND)
-                 || src.hasPermission(Permissions.BROADCAST_RESULT_COMMAND)
-                 || src.hasPermission(Permissions.STOP_VOTE_COMMAND)
-                 || src.hasPermission(Permissions.DELETE_VOTE_COMMAND)) {
+            || src.hasPermission(Permissions.CREATE_VOTE_COMMAND)
+            || src.hasPermission(Permissions.BROADCAST_RESULT_COMMAND)
+            || src.hasPermission(Permissions.STOP_VOTE_COMMAND)
+            || src.hasPermission(Permissions.DELETE_VOTE_COMMAND)) {
             src.sendMessage(Text.of(
                     TextColors.RED,
                     "[vote] : ",
@@ -63,7 +66,7 @@ public class VoteCommand extends AbstractCommand {
             ));
 
         }
-        else  if (src.hasPermission(Permissions.CHOOSE_YOUR_RESLUT_COMMAND)) {
+        else if (src.hasPermission(Permissions.CHOOSE_YOUR_RESLUT_COMMAND)) {
             src.sendMessage(Text.of(
                     TextColors.RED,
                     "[vote] : ",
