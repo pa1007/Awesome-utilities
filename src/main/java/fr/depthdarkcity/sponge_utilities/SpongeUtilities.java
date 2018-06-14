@@ -58,9 +58,9 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "sponge_utilities",
         name = "SpongeUtilities",
-        version = "2.5.2",
-        url = "http://depthdarkcity.fr/",
-        description = "This plugin is made for Tazmarkill , created for depthdarkcity.fr",
+        version = "2.5.3",
+        url = "http://pa1007.cloud4you.fr/",
+        description = "Brings to you some Useful utilities in minecraft sponge and designed to be the dependency of a discord bot ",
         authors = {"pa1007"})
 public class SpongeUtilities {
 
