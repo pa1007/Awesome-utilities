@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "sponge_utilities",
         name = "SpongeUtilities",
-        version = "2.5.3",
+        version = "2.5.3.1",
         url = "http://pa1007.cloud4you.fr/",
         description = "Brings to you some Useful utilities in minecraft sponge and designed to be the dependency of a discord bot ",
         authors = {"pa1007"})
