@@ -582,7 +582,7 @@ public class SpongeUtilities {
             result.put("pos1", pluginInstance.getFirstPos().get(uuid));
         }
         if (pluginInstance.secondPos.containsKey(uuid)) {
-            result.put("pos2", pluginInstance.getFirstPos().get(uuid));
+            result.put("pos2", pluginInstance.getSecondPos().get(uuid));
         }
 
         return result;
