@@ -565,4 +565,27 @@ public class SpongeUtilities {
 
         return result;
     }
+
+    /**
+     * To get the position of a player
+     *
+     * @param uuid the Player UUID can be invalid return a empty map
+     * @return a map with 4 different entry | length :
+     * - 0 -> no pos set or invalid UUID
+     * - 1 -> "pos1" present or "pos2" present = one position set
+     * - 2 -> all position "pos1" and "pos2" present
+     */
+    public static Map<String, Vector3d> getPos(UUID uuid) {
+        Map<String, Vector3d> result = new HashMap<>();
+
+        if (pluginInstance.firstPos.containsKey(uuid)) {
+            result.put("pos1", pluginInstance.getFirstPos().get(uuid));
+        }
+        if (pluginInstance.secondPos.containsKey(uuid)) {
+            result.put("pos2", pluginInstance.getFirstPos().get(uuid));
+        }
+
+        return result;
+    }
+
 }
