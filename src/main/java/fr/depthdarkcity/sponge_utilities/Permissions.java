@@ -189,5 +189,15 @@ public final class Permissions {
      */
     public static final String REPEAT_VOTE_COMMAND = "fr.depthdarkcity.sponge_utilities.repeat_vote_command";
 
+    /**
+     * Permission for creating position.
+     */
+    public static final String POS = "fr.depthdarkcity.sponge_utilities.pos";
+
+    /**
+     * Permission for Playing with the perm.
+     */
+    public static final String PLAY_WITH_POS = "fr.depthdarkcity.sponge_utilities.play_with_perm";
+
     private Permissions() {}
 }

@@ -1,5 +1,6 @@
 package fr.depthdarkcity.sponge_utilities;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.depthdarkcity.sponge_utilities.command.Command;
@@ -14,6 +15,10 @@ import fr.depthdarkcity.sponge_utilities.command.god.UnGodEveryoneCommand;
 import fr.depthdarkcity.sponge_utilities.command.hat.HatCommand;
 import fr.depthdarkcity.sponge_utilities.command.killall.KillAllCommand;
 import fr.depthdarkcity.sponge_utilities.command.ping.PingCommand;
+import fr.depthdarkcity.sponge_utilities.command.pos.ClearPosCommand;
+import fr.depthdarkcity.sponge_utilities.command.pos.FirstPositionCommand;
+import fr.depthdarkcity.sponge_utilities.command.pos.PlayWithPosition;
+import fr.depthdarkcity.sponge_utilities.command.pos.SecondPositionCommand;
 import fr.depthdarkcity.sponge_utilities.command.speed.SpeedCommand;
 import fr.depthdarkcity.sponge_utilities.command.staffChat.StaffChatCommand;
 import fr.depthdarkcity.sponge_utilities.command.stop.StopCommand;
@@ -58,36 +63,39 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "sponge_utilities",
         name = "SpongeUtilities",
-        version = "2.5.3.1",
+        version = "2.5.3.2",
         url = "http://pa1007.cloud4you.fr/",
         description = "Brings to you some Useful utilities in minecraft sponge and designed to be the dependency of a discord bot ",
         authors = {"pa1007"})
 public class SpongeUtilities {
 
-    private static final Gson                         GSON      =
+    private static final Gson                         GSON   =
             new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-    private static final Set<UUID>                    godded    = new HashSet<>();
+    private static final Set<UUID>                    godded = new HashSet<>();
     private static       SpongeUtilities              pluginInstance;
     private static       Optional<UserStorageService> userStorage;
     public final         Map<UUID, List<Warn>>        warns;
-    private              String                       voteMessage;
-    private final        Set<UUID>                    debugList = new HashSet<>();
-    private final        Set<UUID>                    frozedPlayer;
+    private final        Map<UUID, Vector3d>          firstPos, secondPos;
+    private       String               voteMessage;
+    private final Set<UUID>            debugList = new HashSet<>();
+    private final Set<UUID>            frozedPlayer;
     @Inject
     @ConfigDir(sharedRoot = false)
-    private              Path                         configPath;
+    private       Path                 configPath;
     @Inject
-    private              Logger                       logger;
-    private final        Command[]                    commands;
-    private final        Listener[]                   events;
-    private final        Map<String, Warp>            warps;
-    private final        Map<String, Integer>         choices;
-    private              Boolean                      closed;
-    private              List<String>                 listEntityUUID;
-    private              Boolean                      deletable;
-    private final        Set<UUID>                    voter;
+    private       Logger               logger;
+    private final Command[]            commands;
+    private final Listener[]           events;
+    private final Map<String, Warp>    warps;
+    private final Map<String, Integer> choices;
+    private       Boolean              closed;
+    private       List<String>         listEntityUUID;
+    private       Boolean              deletable;
+    private final Set<UUID>            voter;
 
-
+    /**
+     * Main function for spongeUtilities for Command / event / finalVariable initialization
+     */
     public SpongeUtilities() {
         this.events = new Listener[]{
                 new ConnectionListener(this),
@@ -119,7 +127,11 @@ public class SpongeUtilities {
                 new DebugCommand(this),
                 new SwordGiveCommand(this),
                 new KillAllCommand(this),
-                new FreezeCommand(this)
+                new FreezeCommand(this),
+                new FirstPositionCommand(this),
+                new SecondPositionCommand(this),
+                new PlayWithPosition(this),
+                new ClearPosCommand(this)
         };
 
         this.warps = new HashMap<>();
@@ -141,6 +153,8 @@ public class SpongeUtilities {
         this.listEntityUUID.add(EntityTypes.SILVERFISH.getId());
         pluginInstance = this;
         this.frozedPlayer = new HashSet<>();
+        secondPos = new HashMap<>();
+        firstPos = new HashMap<>();
     }
 
     /**
@@ -192,6 +206,11 @@ public class SpongeUtilities {
         return this.configPath.toAbsolutePath().normalize().resolve("warn.json");
     }
 
+    /**
+     * The Reload of sponge Event
+     *
+     * @param event see {@link org.spongepowered.api.event.game.GameReloadEvent GameReloadEvent}
+     */
     @org.spongepowered.api.event.Listener
     public void reload(GameReloadEvent event) {
         event.getCause().first(Player.class).get().sendMessage(Text.of("Relaoding Server"));
@@ -205,6 +224,11 @@ public class SpongeUtilities {
         this.deleteVote();
     }
 
+    /**
+     * The Pre-initialisation Sponge Event
+     *
+     * @param evt see {@link org.spongepowered.api.event.game.state.GamePreInitializationEvent GamePreInitializationEvent}
+     */
     @org.spongepowered.api.event.Listener
     public void preInit(GamePreInitializationEvent evt) {
         this.loadWarps();
@@ -468,6 +492,24 @@ public class SpongeUtilities {
     }
 
     /**
+     * To get the First Position set
+     *
+     * @return a {@link Vector3d Vector3d}
+     */
+    public Map<UUID, Vector3d> getFirstPos() {
+        return firstPos;
+    }
+
+    /**
+     * To get the First Position set
+     *
+     * @return a {@link Vector3d Vector3d}
+     */
+    public Map<UUID, Vector3d> getSecondPos() {
+        return secondPos;
+    }
+
+    /**
      * @return {@link fr.depthdarkcity.sponge_utilities.SpongeUtilities SpongeUtilities} The plugin instance
      */
     public static SpongeUtilities getPluginInstance() {
@@ -507,5 +549,20 @@ public class SpongeUtilities {
         );
         Sponge.getGame().getServer().getBroadcastChannel().send(main);
         return main;
+    }
+
+    /**
+     * To clear the position of a player !
+     *
+     * @param uuid The player UUID, can be set invalid will return 2 false has result
+     * @return true = done ; false = absent ; index 0 = firstPos, index 1 = secondPos
+     */
+    public static List<Boolean> clearPos(UUID uuid) {
+        List<Boolean> result = new ArrayList<>();
+
+        result.add(0, (pluginInstance.firstPos.remove(uuid) != null));
+        result.add(1, (pluginInstance.secondPos.remove(uuid) != null));
+
+        return result;
     }
 }
