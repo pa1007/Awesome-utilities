@@ -27,7 +27,6 @@ public class RepeatCommand extends AbstractCommand {
     @Override
     public CommandSpec createCommand() {
         return CommandSpec.builder()
-                .arguments()
                 .permission(Permissions.REPEAT_VOTE_COMMAND)
                 .description(Text.of("To re-send a new vote"))
                 .executor(this)

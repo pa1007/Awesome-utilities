@@ -35,19 +35,21 @@ public class BroadCastResultCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
+        if (pluginInstance.getChoices().size() == 0) {
+            throw new CommandException(Text.of("there is no vote"));
+        }
         String[] votes = this.pluginInstance.getChoices().keySet().toArray(new String[0]);
         int      vote1 = this.pluginInstance.getChoices().get(votes[0]);
         int      vote2 = this.pluginInstance.getChoices().get(votes[1]);
         int      vote3 = this.pluginInstance.getChoices().get(votes[2]);
-        Text vote = Text.builder().append(Text.of(TextColors.RED,"[Vote] : "))
-                .append(Text.of(TextColors.GREEN,"There is the result of the vote : "))
+        Text vote = Text.builder().append(Text.of(TextColors.RED, "[Vote] : "))
+                .append(Text.of(TextColors.GREEN, "There is the result of the vote : "))
                 .append(Text.NEW_LINE)
-                .append(Text.of(TextColors.GOLD,votes[0], " with ", vote1, " votes"))
+                .append(Text.of(TextColors.GOLD, votes[0], " with ", vote1, " votes"))
                 .append(Text.NEW_LINE)
-                .append(Text.of(TextColors.GOLD,votes[1], " with ", vote2, " votes"))
+                .append(Text.of(TextColors.GOLD, votes[1], " with ", vote2, " votes"))
                 .append(Text.NEW_LINE)
-                .append(Text.of(TextColors.GOLD,votes[2], " with ", vote3, " votes")).build();
+                .append(Text.of(TextColors.GOLD, votes[2], " with ", vote3, " votes")).build();
 
 
         Sponge.getServer().getBroadcastChannel().send(vote);

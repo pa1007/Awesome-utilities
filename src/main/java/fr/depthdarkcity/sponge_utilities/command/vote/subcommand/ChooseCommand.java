@@ -1,9 +1,9 @@
 package fr.depthdarkcity.sponge_utilities.command.vote.subcommand;
 
-import fr.depthdarkcity.sponge_utilities.creator.CommonException;
 import fr.depthdarkcity.sponge_utilities.Permissions;
 import fr.depthdarkcity.sponge_utilities.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilities.command.AbstractCommand;
+import fr.depthdarkcity.sponge_utilities.creator.CommonException;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -28,7 +28,10 @@ public class ChooseCommand extends AbstractCommand {
     @Override
     public CommandSpec createCommand() {
         return CommandSpec.builder()
-                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("Your Vote"))))
+                .arguments(GenericArguments.withSuggestions(
+                        GenericArguments.string(Text.of("Your Vote")),
+                        this.pluginInstance.getChoices().keySet()
+                ))
                 .permission(Permissions.CHOOSE_YOUR_RESLUT_COMMAND)
                 .description(Text.of("For Voting"))
                 .executor(this)
@@ -37,12 +40,21 @@ public class ChooseCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        String vote = args.<String>getOne(Text.of("Your Vote")).get();
+        if (pluginInstance.getChoices().size() == 0) {
+            throw new CommandException(Text.of("there is no vote"));
+        }
+        if (!pluginInstance.getChoices().containsKey(vote)) {
+            throw new CommandException(Text.of(
+                    "There is no vote for this try one of this  ",
+                    this.pluginInstance.getChoices().keySet()
+            ));
+        }
 
         if (!(src instanceof Player)) {
             throw new CommandException(CommonException.CONSOLE_SOURCE_EXCEPTION);
         }
         Player source = (Player) src;
-        String vote   = args.<String>getOne(Text.of("Your Vote")).get();
 
         if (this.pluginInstance.getChoices().containsKey(vote) && !this.pluginInstance.getClosed()) {
 

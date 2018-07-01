@@ -35,6 +35,9 @@ public class ResultCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (pluginInstance.getChoices().size() == 0) {
+            throw new CommandException(Text.of("there is no vote"));
+        }
         if (this.pluginInstance.getClosed()) {
             Map<String, Integer> choices = pluginInstance.getChoices();
 
@@ -45,15 +48,18 @@ public class ResultCommand extends AbstractCommand {
             int vote3 = this.pluginInstance.getChoices().get(votes[2]);
 
             Text vote = Text.builder()
-                    .append(Text.of(TextColors.GREEN,"There is the result of the vote : "))
+                    .append(Text.of(TextColors.GREEN, "There is the result of the vote : "))
                     .append(Text.NEW_LINE)
-                    .append(Text.of(TextColors.GOLD,votes[0], " with ", vote1, " votes"))
+                    .append(Text.of(TextColors.GOLD, votes[0], " with ", vote1, " votes"))
                     .append(Text.NEW_LINE)
-                    .append(Text.of(TextColors.GOLD,votes[1], " with ", vote2, " votes"))
+                    .append(Text.of(TextColors.GOLD, votes[1], " with ", vote2, " votes"))
                     .append(Text.NEW_LINE)
-                    .append(Text.of(TextColors.GOLD,votes[2], " with ", vote3, " votes"))
+                    .append(Text.of(TextColors.GOLD, votes[2], " with ", vote3, " votes"))
                     .append(Text.NEW_LINE)
-                    .append(Text.of(TextColors.GREEN,"Now you can Broadcast this Result before deleting them")).onClick(TextActions.runCommand(
+                    .append(Text.of(
+                            TextColors.GREEN,
+                            "Now you can Broadcast this Result before deleting them"
+                    )).onClick(TextActions.runCommand(
                             "/vote broadcastResult")).build();
             src.sendMessage(vote);
             this.pluginInstance.setDeletable(true);

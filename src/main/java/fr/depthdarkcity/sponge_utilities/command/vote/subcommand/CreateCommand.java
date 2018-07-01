@@ -42,6 +42,7 @@ public class CreateCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+
         int    a     = 0;
         String vote1 = args.<String>getOne(Text.of("First Choice")).get();
         String vote2 = args.<String>getOne(Text.of("second Choice")).get();

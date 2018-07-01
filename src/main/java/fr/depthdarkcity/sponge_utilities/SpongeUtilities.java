@@ -570,9 +570,9 @@ public class SpongeUtilities {
      * To get the position of a player
      *
      * @param uuid the Player UUID can be invalid return a empty map
-     * @return a map with 4 different entry | length :
-     * - 0 -> no pos set or invalid UUID
-     * - 1 -> "pos1" present or "pos2" present = one position set
+     * @return a map with 4 different entry | length : <br>
+     * - 0 -> no pos set or invalid UUID <br>
+     * - 1 -> "pos1" present or "pos2" present = one position set <br>
      * - 2 -> all position "pos1" and "pos2" present
      */
     public static Map<String, Vector3d> getPos(UUID uuid) {

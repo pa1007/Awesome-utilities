@@ -36,6 +36,9 @@ public class StopVoteCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (pluginInstance.getChoices().size() == 0) {
+            throw new CommandException(Text.of("there is no vote"));
+        }
         if (!this.pluginInstance.getClosed()) {
             this.pluginInstance.setClosed(true);
             Sponge.getGame().getServer().getBroadcastChannel().send(Text.of(

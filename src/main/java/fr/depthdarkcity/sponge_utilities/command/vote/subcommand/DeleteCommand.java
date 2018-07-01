@@ -34,11 +34,18 @@ public class DeleteCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (pluginInstance.getChoices().size() == 0) {
+            throw new CommandException(Text.of("there is no vote"));
+        }
         if (this.pluginInstance.getDeletable()) {
             this.pluginInstance.deleteVote();
-            src.sendMessage(Text.of(TextColors.GREEN,"Tou have successfully deleted the current vote"));
-        }else {
-            throw new CommandException(Text.of(TextStyles.BOLD,"You can't delete a vote if you don't see the result before !"));
+            src.sendMessage(Text.of(TextColors.GREEN, "Tou have successfully deleted the current vote"));
+        }
+        else {
+            throw new CommandException(Text.of(
+                    TextStyles.BOLD,
+                    "You can't delete a vote if you don't see the result before !"
+            ));
         }
         return CommandResult.success();
     }

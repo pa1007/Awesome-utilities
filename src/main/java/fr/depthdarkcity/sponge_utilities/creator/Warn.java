@@ -54,8 +54,6 @@ public class Warn {
      */
     private String reasons;
 
-    public Warn() { }
-
     public Warn(
             UUID playerUUID,
             UUID adminUUID,
