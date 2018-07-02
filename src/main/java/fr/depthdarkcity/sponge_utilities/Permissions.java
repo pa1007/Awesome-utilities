@@ -199,5 +199,10 @@ public final class Permissions {
      */
     public static final String PLAY_WITH_POS = "fr.depthdarkcity.sponge_utilities.play_with_perm";
 
+    /**
+     * Permission for Blocking command.
+     */
+    public static final String COMMAND_BLOCK_COMMAND = "fr.depthdarkcity.sponge_utilities.command_block_command";
+
     private Permissions() {}
 }

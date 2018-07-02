@@ -2,6 +2,7 @@ package fr.depthdarkcity.sponge_utilities.listener.chat_listener;
 
 import fr.depthdarkcity.sponge_utilities.SpongeUtilities;
 import fr.depthdarkcity.sponge_utilities.listener.AbstractListener;
+import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
@@ -46,5 +47,12 @@ public class ChatListner extends AbstractListener {
                 }
             }
         }
+        if (e.getSource() instanceof CommandBlockSource) {
+            if (!pluginInstance.isCommandBlockAllowed()) {
+                pluginInstance.getLogger().debug("A command has been run by a command block while disable");
+                e.setCancelled(true);
+            }
+        }
     }
+
 }

@@ -7,6 +7,7 @@ import fr.depthdarkcity.sponge_utilities.command.Command;
 import fr.depthdarkcity.sponge_utilities.command.ban.BanCommand;
 import fr.depthdarkcity.sponge_utilities.command.ban.TempBanCommand;
 import fr.depthdarkcity.sponge_utilities.command.broadcoast.BroadcastCommand;
+import fr.depthdarkcity.sponge_utilities.command.commandblockblockcommand.CommandBlockCommand;
 import fr.depthdarkcity.sponge_utilities.command.debug.DebugCommand;
 import fr.depthdarkcity.sponge_utilities.command.fly.FlyCommand;
 import fr.depthdarkcity.sponge_utilities.command.freeze.FreezeCommand;
@@ -92,6 +93,7 @@ public class SpongeUtilities {
     private       List<String>         listEntityUUID;
     private       Boolean              deletable;
     private final Set<UUID>            voter;
+    private       boolean              commandBlockAllowed;
 
     /**
      * Main function for spongeUtilities for Command / event / finalVariable initialization
@@ -131,7 +133,8 @@ public class SpongeUtilities {
                 new FirstPositionCommand(this),
                 new SecondPositionCommand(this),
                 new PlayWithPosition(this),
-                new ClearPosCommand(this)
+                new ClearPosCommand(this),
+                new CommandBlockCommand(this)
         };
 
         this.warps = new HashMap<>();
@@ -155,6 +158,7 @@ public class SpongeUtilities {
         this.frozedPlayer = new HashSet<>();
         secondPos = new HashMap<>();
         firstPos = new HashMap<>();
+        this.commandBlockAllowed = true;
     }
 
     /**
@@ -510,6 +514,24 @@ public class SpongeUtilities {
     }
 
     /**
+     * To see if the command block is allowed !
+     *
+     * @return {@link Boolean Boolean} if allowed
+     */
+    public boolean isCommandBlockAllowed() {
+        return commandBlockAllowed;
+    }
+
+    /**
+     * Set the commandblock state
+     *
+     * @param commandBlockAllowed {@link Boolean Boolean}
+     */
+    public void setCommandBlockAllowed(boolean commandBlockAllowed) {
+        this.commandBlockAllowed = commandBlockAllowed;
+    }
+
+    /**
      * @return {@link fr.depthdarkcity.sponge_utilities.SpongeUtilities SpongeUtilities} The plugin instance
      */
     public static SpongeUtilities getPluginInstance() {
@@ -587,5 +609,4 @@ public class SpongeUtilities {
 
         return result;
     }
-
 }
